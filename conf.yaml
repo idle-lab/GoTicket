@@ -1,0 +1,7 @@
+database:
+  driverName: mysql
+  host: 111.229.35.8
+  port: 3306
+  database: goticket
+  username: goticket
+  password: cyb15540932948

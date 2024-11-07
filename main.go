@@ -1,13 +1,17 @@
 package main
 
-import "github.com/gin-gonic/gin"
+import (
+	"github.com/2418071565/GoTicket/db"
+	"github.com/2418071565/GoTicket/pkg/logger"
+	"github.com/gin-gonic/gin"
+)
 
 func main() {
-	r := gin.Default()
-	r.GET("/ping", func(c *gin.Context) {
-		c.JSON(200, gin.H{
-			"message": "pong",
-		})
-	})
-	r.Run() // 监听并在 0.0.0.0:8080 上启动服务
+	db.InitDB()
+	ser := gin.Default()
+	ser.Use(gin.LoggerWithConfig(logger.LogToFile()))
+	ser.Use(logger.Recover)
+	CollectRoute(ser)
+
+	ser.Run(":8080")
 }
