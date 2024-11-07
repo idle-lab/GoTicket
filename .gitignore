@@ -1,0 +1,9 @@
+
+dist
+build
+out
+.DS_Store
+*.sublime-project
+*.sublime-workspace
+ 
+.vscode/
