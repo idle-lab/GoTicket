@@ -1,5 +1,4 @@
 
-
 ## 技术选择
 
 后端：Golong，gin框架
@@ -36,6 +35,5 @@
 ## 数据设计
 
 ![](docs/image/data_type.png)
-
 
 

@@ -2,10 +2,43 @@
 dist
 build
 out
-.DS_Store
 *.sublime-project
 *.sublime-workspace
 runtime/
  
 .vscode/
-node_modules
+//.gitignore
+ 
+.DS_Store
+ 
+# local env files
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+
+# dependencies
+/node_modules
+/.pnp
+.pnp.js
+
+# testing
+/coverage
+
+# production
+/build
+
+# misc
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+ 
+# Editor directories and files
+.idea
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
