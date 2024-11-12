@@ -10,7 +10,7 @@ Station 站点信息
 - Postion： 位置描述，可空
 */
 type Station struct {
-	ID      uint16  `gorm:"type:smallint unsigned;autoIncrement"`
+	ID      uint16  `gorm:"type:smallint unsigned;auto_increment"`
 	Name    string  `gorm:"type:varchar(32);index:station_index;not null"`
 	Routes  []Route `gorm:"many2many:route_station"`
 	Postion string

@@ -8,7 +8,6 @@ import (
 	"runtime/debug"
 	"time"
 
-	"github.com/2418071565/GoTicket/controllers"
 	"github.com/gin-gonic/gin"
 	"github.com/sirupsen/logrus"
 )
@@ -121,9 +120,12 @@ func Recover(ctx *gin.Context) {
 		f.WriteString(fmt.Sprintf("panic error time: %s\n", time_str))
 		f.WriteString(fmt.Sprintf("%s\n", err))
 		f.WriteString(fmt.Sprintf("stack trace from panic: %s\n", debug.Stack()))
-		ctx.JSON(http.StatusOK, controllers.JsonErrorStruct{
-			Code:    -1,
-			Message: err,
+		ctx.JSON(http.StatusOK, struct {
+			code    int
+			message interface{}
+		}{
+			code:    -1,
+			message: err,
 		})
 		// 停止执行当前接口的后续代码
 		ctx.Abort()

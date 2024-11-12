@@ -2,6 +2,7 @@ package config
 
 import "time"
 
+// 数据库各种参数的默认值
 var (
 	DB_HOST               string        = "127.0.0.1"
 	DB_PORT               string        = "3306"

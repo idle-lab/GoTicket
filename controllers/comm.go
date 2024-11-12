@@ -1,6 +1,8 @@
 package controllers
 
 import (
+	"net/http"
+
 	"github.com/gin-gonic/gin"
 )
 
@@ -18,10 +20,10 @@ type JsonErrorStruct struct {
 
 func ReturnSuccess(ctx *gin.Context, code int, message interface{}, data interface{}, count int64) {
 	rv := &JsonStruct{Code: code, Message: message, Data: data, Count: count}
-	ctx.JSON(200, rv)
+	ctx.JSON(http.StatusOK, rv)
 }
 
 func ReturnError(ctx *gin.Context, code int, message interface{}) {
 	rv := &JsonErrorStruct{Code: code, Message: message}
-	ctx.JSON(200, rv)
+	ctx.JSON(http.StatusForbidden, rv)
 }
