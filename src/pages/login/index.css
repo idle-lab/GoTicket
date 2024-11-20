@@ -1,0 +1,105 @@
+body {
+  margin: 0;
+  font-family: 'Inter', sans-serif;
+  background-color: #fdfdfb;
+}
+
+.login-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.login-title {
+  font-weight: 700;
+  color: #2e2e2e;
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.login-tabs .ant-tabs-nav {
+  justify-content: center;
+}
+
+.login-tabs .ant-tabs-tab {
+  padding: 10px 24px;
+  font-size: 14px;
+  border-radius: 40px;
+  background-color: #f0eeeb;
+  color: #193d1f;
+  transition: all 0.3s ease;
+}
+
+.ant-tabs-ink-bar {
+  display: none !important;
+}
+
+.login-tabs .ant-tabs-tab-active {
+  background-color: #193d1f;
+}
+
+.ant-tabs-tab.ant-tabs-tab-active .ant-tabs-tab-btn {
+  color: #f0eeeb !important;
+  text-shadow: none !important;
+}
+
+.login-tabs .ant-tabs-tab:hover {
+  color: #193d1f;
+}
+
+/* Transition for form switch */
+.form-transition-enter {
+  opacity: 0;
+  transform: translateY(20px);
+}
+
+.form-transition-enter-active {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.form-transition-exit {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.form-transition-exit-active {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.login-form {
+  width: 100%;
+  max-width: 400px;
+  margin-top: 20px;
+  background: #fff;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+}
+
+.login-form .ant-form-item-label > label {
+  font-size: 14px;
+  color: #2e2e2e;
+}
+
+.login-form .ant-input,
+.login-form .ant-input-password {
+  border-radius: 6px;
+  padding: 10px 15px;
+  font-size: 14px;
+}
+
+.login-btn {
+  background-color: #2e2e2e;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  height: 45px;
+}
+
