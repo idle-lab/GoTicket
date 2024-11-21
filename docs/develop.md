@@ -20,44 +20,7 @@
 - `test`：单元测试及 benchmark。
 
 
-## API
-
-信息传递都以 Json 格式进行
-
-### User
-
-#### 注册：
-
-URL：`/user`
-
-Method：`POST`
-
-Body：
-
-|字段名|类型|要求|
-|:-:|:-:|:-:|
-|name|string|不超过 20 byte|
-|sex|string|enum('Male', 'Female')|
-|password|string||
-|phone|string|合法手机号|
-|id_number|string|合法身份证号|
-
-
-返回信息：
-
-```
-{
-    "code": 0,  // 状态码
-    "msg": "OK",  // 状态信息
-    "data": { 
-        "id": 2 // 创建用户的 id
-    },
-    "count": 1  // 返回的数据条数
-}
-```
-
-- 登录：
-
+## 架构
 
 
 ## 规范
@@ -92,17 +55,6 @@ DB_MAX_IDLE_CONNS
 ```
 
 目录及文件名要遵循蛇形命名法。
-
-### API
-
-遵循 RESTful 风格，URI 只标识资源，如：用户，订单，车票等等，使用 HTTP 做动词标识对资源的各种操作，对资源的增删查改，分别对应 POST、DELETE、GET、PUT。
-
-如：添加一个用户，AIP 应为
-
-```
-Method: POST
-URI: /user/:id
-```
 
 ### 其他
 

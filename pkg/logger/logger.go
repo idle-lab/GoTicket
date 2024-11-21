@@ -87,7 +87,7 @@ func LogToFile() gin.LoggerConfig {
 
 	return gin.LoggerConfig{
 		Formatter: func(params gin.LogFormatterParams) string {
-			return fmt.Sprintf(`[%s - %s] "%s %s %d" %s. %s\n`,
+			return fmt.Sprintf("[%s - %s] \"%s %s %d\" %s. %s\n",
 				params.TimeStamp.Format("15:04:05"),
 				params.ClientIP,
 				params.Method,

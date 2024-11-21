@@ -4,7 +4,7 @@
 
 后端：Golong，gin框架
 
-前端：Vue
+前端：React
 
 数据库：OpenGuass
 

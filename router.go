@@ -6,9 +6,24 @@ import (
 )
 
 func CollectRoute(ser *gin.Engine) *gin.Engine {
+<<<<<<< HEAD
 	user_group := ser.Group("/user")
 	user_group.GET("/token", controllers.Login)
 	user_group.GET("/:token", controllers.GetInfo)
 	user_group.POST("", controllers.Register)
+=======
+	// 需要 token 鉴权的 API
+	auth_group := ser.Group("/", controllers.JWTAuthMiddleware())
+	{
+		auth_user_group := auth_group.Group("/user")
+		{
+			auth_user_group.GET("", controllers.GetInfo)
+		}
+	}
+
+	// 普通 API
+	ser.GET("/token", controllers.Login)
+	ser.POST("/user", controllers.Register)
+>>>>>>> 751b7c4 (finish login)
 	return ser
 }
