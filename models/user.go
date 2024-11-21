@@ -3,7 +3,8 @@ package models
 import (
 	"time"
 
-	"github.com/2418071565/GoTicket/db"
+	"github.com/2418071565/GoTicket/dto"
+	"github.com/2418071565/GoTicket/storage/db"
 )
 
 /*
@@ -26,24 +27,50 @@ User 用户信息
 - Tickers：用户所有的车票
 */
 type User struct {
-	ID           uint32    `gorm:"primaryKey;type:int unsigned"`
-	Name         string    `gorm:"type:char(20);index:name_index;not null"`
-	Sex          string    `gorm:"type:enum('Male','Famale');not null"`
-	Password     string    `gorm:"type:varchar(20);not null"`
-	Phone_number string    `gorm:"type:char(15);not null"`
-	Create_Date  time.Time `gorm:"type:datetime;not null"`
-	ID_number    string    `gorm:"type:char(18);not null"`
-	Orders       []Order   `gorm:"foreignKey:UserID"`
-	Tickers      []Ticket  `gorm:"foreignKey:UserID"`
+	ID          uint32    `gorm:"primaryKey;type:int unsigned"`
+	Name        string    `gorm:"type:char(20);index:name_index;not null"`
+	Sex         string    `gorm:"type:enum('Male','Famale');not null"`
+	Password    string    `gorm:"type:varchar(20);not null"`
+	Phone       string    `gorm:"type:char(15);not null"`
+	Create_Date time.Time `gorm:"type:datetime;not null"`
+	Id_number   string    `gorm:"type:char(18);not null"`
+	Orders      []Order   `gorm:"foreignKey:UserID"`
+	Tickers     []Ticket  `gorm:"foreignKey:UserID"`
 }
 
-func GetUser(id uint32) (User, error) {
-	user := User{ID: id}
-	err := db.DB.First(&user).Error
-	return user, err
+func GetUserByPhone(phone string) (*dto.User, error) {
+	user := &User{Phone: phone}
+	if err := db.DB.First(user).Error; err != nil {
+		return nil, err
+	}
+	return &dto.User{
+		ID:          user.ID,
+		Name:        user.Name,
+		Sex:         user.Sex,
+		Password:    user.Password,
+		Phone:       user.Phone,
+		Create_date: user.Create_Date,
+		Id_number:   user.Id_number,
+	}, nil
 }
 
-func AddUser(user *User) (uint32, error) {
+func GetUser(id uint32) (*dto.User, error) {
+	user := &User{ID: id}
+	if err := db.DB.First(user).Error; err != nil {
+		return nil, err
+	}
+	return &dto.User{
+		ID:          user.ID,
+		Name:        user.Name,
+		Sex:         user.Sex,
+		Password:    user.Password,
+		Phone:       user.Phone,
+		Create_date: user.Create_Date,
+		Id_number:   user.Id_number,
+	}, nil
+}
+
+func AddUser(user *dto.User) (uint32, error) {
 	err := db.DB.Create(user).Error
 	return user.ID, err
 }

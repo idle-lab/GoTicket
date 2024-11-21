@@ -1,7 +1,6 @@
 package main
 
 import (
-	_ "github.com/2418071565/GoTicket/db"
 	"github.com/2418071565/GoTicket/pkg/logger"
 	"github.com/gin-gonic/gin"
 )

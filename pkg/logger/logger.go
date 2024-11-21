@@ -17,7 +17,7 @@ func init() {
 		FullTimestamp:   true,       // 显示完整时间戳
 		TimestampFormat: "15:04:05", // 自定义时间格式
 	})
-	logrus.SetLevel(logrus.InfoLevel) // 默认等级为 Info
+	logrus.SetLevel(logrus.DebugLevel) // 默认等级为 Info
 }
 
 func SetLevel(level logrus.Level) {

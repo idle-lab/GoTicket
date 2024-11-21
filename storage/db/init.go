@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/2418071565/GoTicket/config"
+	"github.com/2418071565/GoTicket/pkg/config"
 	"github.com/2418071565/GoTicket/pkg/logger"
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/jinzhu/gorm"
@@ -28,9 +28,9 @@ func prepareDatabase() {
 	defer DB.Close()
 
 	// 打开 .sql 文件
-	file, err := os.Open("db/init.sql")
+	file, err := os.Open("storage/db/init.sql")
 	if err != nil {
-		logger.Fatalf("Failed to open SQL file: %v\n", err)
+		logger.Fatalf("failed to open SQL file: %v\n", err)
 	}
 	defer file.Close()
 
@@ -47,13 +47,13 @@ func prepareDatabase() {
 		if line[len(line)-1] == ';' { // 以分号结束的语句表示一个完整的 SQL 语句
 			_, err = DB.Exec(statement)
 			if err != nil {
-				logger.Infof("Failed to execute statement %q: %v\n", statement, err)
+				logger.Infof("failed to execute statement %q: %v\n", statement, err)
 			}
 			statement = "" // 重置语句
 		}
 	}
 	if err = scanner.Err(); err != nil {
-		logger.Fatalf("Error reading file: %v\n", err)
+		logger.Fatalf("error reading file: %v\n", err)
 	}
 }
 

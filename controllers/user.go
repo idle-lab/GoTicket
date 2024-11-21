@@ -2,48 +2,72 @@ package controllers
 
 import (
 	"fmt"
-	"strconv"
+	"regexp"
 	"time"
 
+	"github.com/2418071565/GoTicket/dto"
 	"github.com/2418071565/GoTicket/models"
 	"github.com/2418071565/GoTicket/pkg/logger"
 	"github.com/gin-gonic/gin"
 )
 
-type User struct {
-	ID           uint32
-	Name         string
-	Sex          string
-	Password     string
-	Phone_number string
-	Create_date  time.Time
-	ID_number    string
+func GetInfo(ctx *gin.Context) {
+
 }
 
-func (u User) GetUser(ctx *gin.Context) {
-	id, err := strconv.Atoi(ctx.Param("id"))
-	if err != nil {
-		ReturnError(ctx, -1, fmt.Sprintf("user id is not a int, which is %s", err))
-		ctx.Abort()
+func Login(ctx *gin.Context) {
+	phone := ctx.Query("phone")
+	if ok, err := regexp.MatchString(`^\d+$`, phone); !ok || err != nil {
+		ReturnError(ctx, -1, "invalid phone number")
 		return
 	}
-	user, err := models.GetUser(uint32(id))
+	password := ctx.Query("password")
+	user, err := models.GetUserByPhone(phone)
 	if err != nil {
-		ReturnError(ctx, -1, fmt.Sprintf("error with %s", err))
-		ctx.Abort()
+		ReturnError(ctx, -1, fmt.Sprintf("login failed with err: %s", err))
 		return
 	}
-	ReturnSuccess(ctx, 0, "OK", user, 1)
+	if user.Password != password {
+		ReturnError(ctx, -1, "phone or password is incorrect")
+		return
+	}
+	ReturnSuccess(ctx, 0, "OK", *user, 1)
 }
 
-func (u User) AddUser(ctx *gin.Context) {
-	id, err := models.AddUser(&models.User{
-		Name:         ctx.PostForm("name"),
-		Sex:          ctx.PostForm("sex"),
-		Password:     ctx.PostForm("password"),
-		Phone_number: ctx.PostForm("phone_number"),
-		Create_Date:  time.Now(),
-		ID_number:    ctx.PostForm("ID_number"),
+func Register(ctx *gin.Context) {
+	name := ctx.PostForm("name")
+	if len(name) > 20 {
+		ReturnError(ctx, -1, "name cannot exceed 20 characters")
+		return
+	}
+	sex := ctx.PostForm("sex")
+	if sex != "Male" && sex != "Female" {
+		ReturnError(ctx, -1, "invalid sex")
+		return
+	}
+	password := ctx.PostForm("password")
+	if len(password) > 20 {
+		ReturnError(ctx, -1, "name cannot exceed 20 characters")
+		return
+	}
+	phone := ctx.PostForm("phone")
+	if ok, err := regexp.MatchString(`^\d+$`, phone); !ok || err != nil {
+		ReturnError(ctx, -1, "invalid phone number")
+		return
+	}
+	id_number := ctx.PostForm("id_number")
+	if ok, err := regexp.MatchString(`^\d{15}$|^\d{17}(\d|X|x)$`, id_number); !ok || err != nil {
+		ReturnError(ctx, -1, "invalid id_number")
+		return
+	}
+
+	id, err := models.AddUser(&dto.User{
+		Name:        name,
+		Sex:         sex,
+		Password:    password,
+		Phone:       phone,
+		Create_date: time.Now(),
+		Id_number:   id_number,
 	})
 	if err != nil {
 		logger.Errorf("add user failed with err: %s", err)

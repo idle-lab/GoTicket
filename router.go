@@ -6,9 +6,9 @@ import (
 )
 
 func CollectRoute(ser *gin.Engine) *gin.Engine {
-
 	user_group := ser.Group("/user")
-	user_group.GET("/:id", (&controllers.User{}).GetUser)
-	user_group.POST("", (&controllers.User{}).AddUser)
+	user_group.GET("/token", controllers.Login)
+	user_group.GET("/:token", controllers.GetInfo)
+	user_group.POST("", controllers.Register)
 	return ser
 }

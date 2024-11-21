@@ -5,3 +5,5 @@ database:
   database: goticket
   username: goticket
   password: cyb15540932948
+develop:
+  mod: debug
