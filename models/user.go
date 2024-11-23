@@ -71,6 +71,15 @@ func GetUser(id uint32) (*dto.User, error) {
 }
 
 func AddUser(user *dto.User) (uint32, error) {
-	err := db.DB.Create(user).Error
-	return user.ID, err
+	m_user := User{
+		ID:          user.ID,
+		Name:        user.Name,
+		Sex:         user.Sex,
+		Password:    user.Password,
+		Phone:       user.Phone,
+		Create_Date: user.Create_date,
+		Id_number:   user.Id_number,
+	}
+	err := db.DB.Create(&m_user).Error
+	return m_user.ID, err
 }

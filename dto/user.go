@@ -3,11 +3,11 @@ package dto
 import "time"
 
 type User struct {
-	ID          uint32
-	Name        string
-	Sex         string
-	Password    string
-	Phone       string
-	Create_date time.Time
-	Id_number   string
+	ID          uint32    `json:"id"`
+	Name        string    `json:"name"`
+	Sex         string    `json:"sex"`
+	Password    string    `json:"password"`
+	Phone       string    `json:"phone"`
+	Create_date time.Time `json:"create_date"`
+	Id_number   string    `json:"id_number"`
 }
