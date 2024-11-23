@@ -22,6 +22,7 @@
 
 ## 架构
 
+![](image/architecture.png)
 
 ## 规范
 
