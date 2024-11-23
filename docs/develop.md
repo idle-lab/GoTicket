@@ -66,6 +66,6 @@ DB_MAX_IDLE_CONNS
 
 // comments
 type Ticket struct {
-  name string `This is a exmaple`
+  name string `This is a example`
 }
 ```
