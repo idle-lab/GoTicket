@@ -1,10 +1,10 @@
 import React, { useState } from 'react'
 import { Form, Input, Button, Tabs } from 'antd'
-import { CSSTransition } from 'react-transition-group' // Import CSSTransition
+import { CSSTransition } from 'react-transition-group'
 import './index.css'
 
 const Login = () => {
-  const [activeTab, setActiveTab] = useState('login') // 控制登录和注册切换
+  const [activeTab, setActiveTab] = useState('login')
 
   // 表单提交事件
   const onFinish = (values) => {
