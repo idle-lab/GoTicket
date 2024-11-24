@@ -11,13 +11,15 @@ import (
 var jwt_key = []byte("goticket")
 
 type Claims struct {
-	id uint32
+	Id       uint32
+	Is_admin bool
 	jwt.RegisteredClaims
 }
 
-func GenerateToken(user_id uint32) (string, error) {
+func GenerateToken(user_id uint32, is_admin bool) (string, error) {
 	claims := &Claims{
-		id: user_id,
+		Id:       user_id,
+		Is_admin: is_admin,
 		RegisteredClaims: jwt.RegisteredClaims{
 			ExpiresAt: jwt.NewNumericDate(time.Now().Add(10 * time.Minute)),
 			IssuedAt:  jwt.NewNumericDate(time.Now()),
@@ -25,7 +27,6 @@ func GenerateToken(user_id uint32) (string, error) {
 		},
 	}
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-
 	return token.SignedString(jwt_key)
 }
 
@@ -36,9 +37,8 @@ func ParseToken(token_str string) (*dto.User, error) {
 	if err != nil {
 		return nil, err
 	}
-
 	if claims, ok := token.Claims.(*Claims); ok && token.Valid {
-		return &dto.User{ID: claims.id}, nil
+		return &dto.User{ID: claims.Id, Is_admin: claims.Is_admin}, nil
 	}
 	return nil, fmt.Errorf("token is invalid")
 }
