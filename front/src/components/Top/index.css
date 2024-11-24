@@ -1,12 +1,45 @@
 .container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
   background-color: #fdfcf6; /* 白色背景 */
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* 添加阴影 */
   height: 60px; /* 固定高度 */
 }
 
 .container-box {
-  width: 80%;
-  margin: 0 auto;
+  width: 100%;
+  max-width: 1200px;
+  padding: 0 20px;
+  box-sizing: border-box; 
+}
+
+.logo {
+  font-size: 24px;
+  font-weight: bold;
+  color: #2e2e2e;
+}
+
+/* Support 样式 */
+.support {
+  text-align: center; /* 文本居中 */
+}
+
+/* Login/Sign in 样式 */
+.loginSignin {
+  display: flex;
+  justify-content: flex-end; /* 内容向右对齐 */
+  align-items: center; /* 垂直居中 */
+}
+
+.loginSignin a {
+  color: #2e2e2e;
+  margin: 0 5px; /* 间距 */
+  text-decoration: none;
+}
+
+.loginSignin a:hover {
+  color: #1890ff; /* 鼠标悬停颜色 */
 }
 
 .logo {
