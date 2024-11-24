@@ -9,9 +9,13 @@ func CollectRoute(ser *gin.Engine) *gin.Engine {
 	// 需要 token 鉴权的 API
 	auth_group := ser.Group("/", controllers.JWTAuthMiddleware())
 	{
-		auth_user_group := auth_group.Group("/user")
+		auth_user_group := auth_group.Group("/userInfo")
 		{
 			auth_user_group.GET("", controllers.GetInfo)
+		}
+		auth_admin_group := auth_group.Group("/admin")
+		{
+			auth_admin_group.POST("", controllers.AdminRegister)
 		}
 	}
 

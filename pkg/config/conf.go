@@ -43,4 +43,10 @@ func init() {
 	if viper.IsSet("database.connection_max_idle_time") {
 		DB_CONN_MAX_IDLE_TIME = viper.GetDuration("database.connection_max_idle_time")
 	}
+	if viper.IsSet("server.admin") {
+		DEFAULT_ADMIN = viper.GetString("server.admin")
+	}
+	if viper.IsSet("server.password") {
+		DEFAULT_ADMIN_PASSWORD = viper.GetString("server.password")
+	}
 }

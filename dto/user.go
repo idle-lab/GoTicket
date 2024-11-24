@@ -10,4 +10,5 @@ type User struct {
 	Phone       string    `json:"phone"`
 	Create_date time.Time `json:"create_date"`
 	Id_number   string    `json:"id_number"`
+	Is_admin    bool      `json:"is_admin"`
 }

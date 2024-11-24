@@ -6,5 +6,5 @@ database:
   username: goticket
   password: cyb15540932948
 server:
-  admin: admin
-  password: 000000
+  admin: goticket
+  password: 123456

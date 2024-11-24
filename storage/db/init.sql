@@ -5,22 +5,7 @@ USE `goticket`;
 CREATE TABLE IF NOT EXISTS `users` (
   `id` int unsigned AUTO_INCREMENT NOT NULL,
   `name` char(20) NOT NULL,
-  `sex` enum('Male','Famale') NOT NULL,
-  `password` varchar(20) NOT NULL,
-  `phone` char(15) NOT NULL,
-  `create_date` datetime NOT NULL,
-  `id_number` char(18) NOT NULL,
-  PRIMARY KEY (`id`),
-  KEY `name_index` (`name`),
-  KEY `phone_index` (`phone`),
-  KEY `id_number_idex` (`id_number`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
-
-CREATE TABLE IF NOT EXISTS `users` (
-  `id` int unsigned AUTO_INCREMENT NOT NULL,
-  `name` char(20) NOT NULL,
-  `sex` enum('Male','Famale') NOT NULL,
+  `sex` enum('Male','Female') NOT NULL,
   `password` varchar(20) NOT NULL,
   `phone` char(15) NOT NULL,
   `create_date` datetime NOT NULL,
@@ -32,8 +17,8 @@ CREATE TABLE IF NOT EXISTS `users` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 CREATE TABLE IF NOT EXISTS `admins` (
-  `user_id` int unsigned NOT NULL,
-  FOREIGN KEY (`user_id`) REFERENCES users(`id`)
+  `id` int unsigned NOT NULL,
+  FOREIGN KEY (`id`) REFERENCES users(`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 CREATE TABLE IF NOT EXISTS `trains` (
