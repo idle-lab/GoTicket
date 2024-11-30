@@ -4,12 +4,17 @@ body {
   background-color: #fdfdfb;
 }
 
+/* 确保按钮铺满 */
+.login-container .login-form .login-btn {
+  width: 100%;
+}
+
 .login-container {
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  height: 100vh;
+  height: 90vh;
 }
 
 .login-title {
@@ -32,18 +37,22 @@ body {
   transition: all 0.3s ease;
 }
 
-.ant-tabs-ink-bar {
+/* .ant-tabs-ink-bar {
   display: none !important;
-}
+} */
 
 .login-tabs .ant-tabs-tab-active {
   background-color: #193d1f;
 }
 
-.ant-tabs-tab.ant-tabs-tab-active .ant-tabs-tab-btn {
+.login-tabs .ant-tabs-tab-active .ant-tabs-tab-btn {
+  color: #f0eeeb;
+}
+
+/* .ant-tabs-tab.ant-tabs-tab-active .ant-tabs-tab-btn {
   color: #f0eeeb !important;
   text-shadow: none !important;
-}
+} */
 
 .login-tabs .ant-tabs-tab:hover {
   color: #193d1f;
@@ -85,13 +94,6 @@ body {
 .login-form .ant-form-item-label > label {
   font-size: 14px;
   color: #2e2e2e;
-}
-
-.login-form .ant-input,
-.login-form .ant-input-password {
-  border-radius: 6px;
-  padding: 10px 15px;
-  font-size: 14px;
 }
 
 .login-btn {

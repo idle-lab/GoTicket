@@ -1,6 +1,14 @@
 .container2 {
-  width: 80%;
-  height: 100vh;
-  margin: 0 auto;
-  background-color: pink;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
+
+.container2-box {
+  width: 100%;
+  max-width: 1200px;
+  padding: 0 20px;
+  height: 100vh;
+  box-sizing: border-box; 
+}
+

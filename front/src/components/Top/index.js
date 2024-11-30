@@ -1,7 +1,6 @@
 import React from 'react'
 import { Col, Row } from 'antd'
 import './index.css'
-import { AudioOutlined } from '@ant-design/icons'
 import { Input, Typography } from 'antd'
 import { Divider } from 'antd'
 import { Link } from 'react-router-dom'
@@ -15,9 +14,9 @@ const Top = () => {
   return (
     <div className="container">
       <div className="container-box">
-        <Row>
+        <Row type="flex" justify="start" align="middle">
           <Col span={4}>
-            <div className="logo">GoTicket</div>
+            <div className="logo"><Link to="/">GoTicket</Link></div>
           </Col>
           <Col span={14}>
             <Search
