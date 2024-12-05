@@ -1,25 +1,22 @@
-CREATE DATABASE IF NOT EXISTS `goticket`;
+CREATE DATABASE `goticket`;
 
 USE `goticket`;
 
 CREATE TABLE IF NOT EXISTS `users` (
-  `id` int unsigned AUTO_INCREMENT NOT NULL,
-  `name` char(20) NOT NULL,
-  `sex` enum('Male','Female') NOT NULL,
-  `password` varchar(20) NOT NULL,
-  `phone` char(15) NOT NULL,
-  `create_date` datetime NOT NULL,
-  `id_number` char(18) NOT NULL,
+  `id` INT UNSIGNED AUTO_INCREMENT NOT NULL,
+  `name` CHAR(20) NOT NULL,
+  `sex` ENUM('Male','Female') NOT NULL,
+  `password` VARCHAR(20) NOT NULL,
+  `phone` CHAR(15) NOT NULL,
+  `create_date` DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL,
+  `id_number` CHAR(18) NOT NULL,
+  `role` ENUM('admin', 'user') DEFAULT 'admin',
   PRIMARY KEY (`id`),
   KEY `name_index` (`name`),
   KEY `phone_index` (`phone`),
   KEY `id_number_idex` (`id_number`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
-CREATE TABLE IF NOT EXISTS `admins` (
-  `id` int unsigned NOT NULL,
-  FOREIGN KEY (`id`) REFERENCES users(`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 CREATE TABLE IF NOT EXISTS `trains` (
   `id` smallint unsigned AUTO_INCREMENT NOT NULL,
@@ -32,8 +29,7 @@ CREATE TABLE IF NOT EXISTS `trains` (
 
 CREATE TABLE IF NOT EXISTS `routes` (
   `id` smallint unsigned AUTO_INCREMENT NOT NULL,
-  `distance` json DEFAULT NULL,
-  `price_pk` decimal(10,2) NOT NULL,
+  `price_pk` decimal(9, 2)  NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
@@ -42,25 +38,29 @@ CREATE TABLE IF NOT EXISTS `stations` (
   `name` varchar(32) NOT NULL,
   `postion` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`),
-  KEY `station_index` (`name`)
+  KEY `station_index` (`name`),
+  KEY `postion_index` (`postion`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 
 CREATE TABLE IF NOT EXISTS `route_station` (
   `route_id` smallint unsigned NOT NULL,
   `station_id` smallint unsigned NOT NULL,
+  `distance_from_start` double NOT NULL,
   PRIMARY KEY (`route_id`,`station_id`),
   FOREIGN KEY (`route_id`) REFERENCES routes(`id`),
-  FOREIGN KEY (`station_id`) REFERENCES routes(`id`)
+  FOREIGN KEY (`station_id`) REFERENCES stations(`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 CREATE TABLE IF NOT EXISTS `train_numbers` (
-  `id` int unsigned AUTO_INCREMENT NOT NULL,
-  `status` varchar(255) NOT NULL,
-  `available_seats` smallint unsigned NOT NULL,
-  `start_time` datetime NOT NULL,
-  `train_id` smallint unsigned NOT NULL,
-  `route_id` smallint unsigned NOT NULL,
+  `id` INT UNSIGNED AUTO_INCREMENT NOT NULL,
+  `code` VARCHAR(4) NOT NULL,
+  `status` ENUM('Online','Offline') NOT NULL,
+  `available_seats` SMALLINT UNSIGNED NOT NULL,
+  `start_time` DATETIME NOT NULL,
+  `dwell_time_per_stop` VARCHAR(255) NOT NULL,  
+  `train_id` SMALLINT UNSIGNED NOT NULL,
+  `route_id` SMALLINT UNSIGNED NOT NULL,
   PRIMARY KEY (`id`),
   FOREIGN KEY (`train_id`) REFERENCES trains(`id`),
   FOREIGN KEY (`route_id`) REFERENCES routes(`id`)

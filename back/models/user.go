@@ -26,6 +26,7 @@ func init() {
 			Phone:       config.DEFAULT_ADMIN,
 			Create_date: time.Now(),
 			Id_number:   "",
+			Role:        "admin",
 		}
 		db.DB.Create(default_admin)
 		db.DB.Table("admins").Create(map[string]interface{}{"id": default_admin.ID})

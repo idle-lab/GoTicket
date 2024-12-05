@@ -30,7 +30,7 @@ func Authentication(ctx *gin.Context, phone string, password string) (*dto.User,
 	}
 
 	// 生成 token，返回给用户
-	if err := GenerateToken(ctx, user.ID, user.Is_admin); err != nil {
+	if err := GenerateToken(ctx, user.ID, user.Role); err != nil {
 		return user, &dto.JsonErrorStruct{
 			Code:    http.StatusBadRequest,
 			Message: err,
@@ -70,8 +70,8 @@ func GetUserInfoFromRequest(ctx *gin.Context) (*dto.User, error) {
 	return user, nil
 }
 
-func GenerateToken(ctx *gin.Context, id uint32, is_admin bool) error {
-	token, err := jwt.GenerateToken(id, is_admin)
+func GenerateToken(ctx *gin.Context, id uint32, role string) error {
+	token, err := jwt.GenerateToken(id, role)
 	if err != nil {
 		logger.Errorf("generate token failed with err: %s", err)
 		return fmt.Errorf("generate token failed with err: %s", err)
