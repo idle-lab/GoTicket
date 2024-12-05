@@ -1,14 +1,11 @@
+/* Reset styles */
 body {
   margin: 0;
   font-family: 'Inter', sans-serif;
   background-color: #fdfdfb;
 }
 
-/* 确保按钮铺满 */
-.login-container .login-form .login-btn {
-  width: 100%;
-}
-
+/* Container styles */
 .login-container {
   display: flex;
   flex-direction: column;
@@ -24,6 +21,7 @@ body {
   margin-bottom: 40px;
 }
 
+/* Tabs styles */
 .login-tabs .ant-tabs-nav {
   justify-content: center;
 }
@@ -37,28 +35,23 @@ body {
   transition: all 0.3s ease;
 }
 
-/* .ant-tabs-ink-bar {
-  display: none !important;
-} */
-
 .login-tabs .ant-tabs-tab-active {
   background-color: #193d1f;
 }
 
-.login-tabs .ant-tabs-tab-active .ant-tabs-tab-btn {
-  color: #f0eeeb;
+.login-container .login-tabs .ant-tabs-tab-active .ant-tabs-tab-btn {
+  color: #f0eeeb; 
 }
 
-/* .ant-tabs-tab.ant-tabs-tab-active .ant-tabs-tab-btn {
-  color: #f0eeeb !important;
-  text-shadow: none !important;
-} */
+.login-tabs .ant-tabs-ink-bar {
+  display: none;
+}
 
 .login-tabs .ant-tabs-tab:hover {
   color: #193d1f;
 }
 
-/* Transition for form switch */
+/* Form transition animations */
 .form-transition-enter {
   opacity: 0;
   transform: translateY(20px);
@@ -81,13 +74,14 @@ body {
   transition: opacity 0.3s ease, transform 0.3s ease;
 }
 
+/* Form styles */
 .login-form {
   width: 100%;
   max-width: 400px;
   margin-top: 20px;
+  padding: 20px;
   background: #fff;
   border-radius: 12px;
-  padding: 20px;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
 }
 
@@ -96,12 +90,18 @@ body {
   color: #2e2e2e;
 }
 
+/* Button styles */
 .login-btn {
+  width: 100%;
+  height: 45px;
+  font-size: 16px;
+  font-weight: 600;
+  color: #fff;
   background-color: #2e2e2e;
   border: none;
   border-radius: 8px;
-  font-size: 16px;
-  font-weight: 600;
-  height: 45px;
 }
 
+.login-btn:hover {
+  background-color: #404040;
+}

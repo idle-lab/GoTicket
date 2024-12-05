@@ -12,6 +12,7 @@ import (
 	"github.com/2418071565/GoTicket/services"
 	"github.com/gin-gonic/gin"
 	"github.com/jinzhu/gorm"
+	"github.com/2418071565/GoTicket/pkg/config"
 )
 
 // 鉴权中间件
@@ -44,7 +45,7 @@ func GetInfo(ctx *gin.Context) {
 func Login(ctx *gin.Context) {
 	// 获取识别用户的消息
 	phone := ctx.Query("phone")
-	if ok, err := regexp.MatchString(`^\d+$`, phone); !ok || err != nil {
+	if ok, err := regexp.MatchString(`^\d+$`, phone); (!ok || err != nil) && phone != config.DEFAULT_ADMIN {
 		ReturnError(ctx, http.StatusBadRequest, "invalid phone number")
 		return
 	}
