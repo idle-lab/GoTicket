@@ -1,0 +1,46 @@
+.user-info {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 4px;
+  transition: all 0.3s;
+}
+
+.user-info:hover {
+  background-color: rgba(0, 0, 0, 0.04);
+}
+
+.username {
+  margin-left: 8px;
+  max-width: 120px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+}
+
+.admin-badge {
+  margin-left: 4px;
+  font-size: 12px;
+  padding: 0 4px;
+  background-color: #f56a00;
+  color: white;
+  border-radius: 2px;
+}
+
+.login-register {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.login-register a {
+  color: #2e2e2e;
+  transition: color 0.3s;
+}
+
+.login-register a:hover {
+  color: #1890ff;
+} 

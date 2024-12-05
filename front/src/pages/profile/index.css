@@ -1,0 +1,113 @@
+.profile-layout {
+  min-height: calc(100vh - 128px); /* 减去顶部导航的高度 */
+  background: #f0f2f5;
+}
+
+.profile-sider {
+  background: white !important;
+  border-right: 1px solid #f0f0f0;
+  overflow: auto;
+  height: 100vh;
+  position: fixed;
+  left: 0;
+  top: 64px; 
+  bottom: 0;
+}
+
+.user-info-brief {
+  padding: 24px;
+  text-align: center;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.user-name {
+  margin-top: 16px;
+}
+
+.user-name h3 {
+  margin: 0;
+  color: #1f1f1f;
+}
+
+.profile-menu {
+  border-right: none !important;
+}
+
+.profile-content {
+  margin-left: 250px;
+  padding: 24px;
+  min-height: calc(100vh - 128px);
+}
+
+.profile-card {
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.profile-header {
+  padding: 24px;
+  border-bottom: 1px solid #f0f0f0;
+  display: flex;
+  align-items: center;
+}
+
+.profile-title {
+  margin-left: 16px;
+  flex-grow: 1;
+}
+
+.profile-title h2 {
+  margin: 0;
+  color: #1f1f1f;
+  font-size: 20px;
+}
+
+.admin-badge {
+  display: inline-block;
+  margin-left: 8px;
+  padding: 2px 8px;
+  background-color: #f56a00;
+  color: white;
+  border-radius: 4px;
+  font-size: 12px;
+}
+
+.profile-info {
+  padding: 24px;
+}
+
+.edit-form {
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.form-buttons {
+  margin-top: 24px;
+  text-align: right;
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+  .profile-sider {
+    display: none;
+  }
+  
+  .profile-content {
+    margin-left: 0;
+    padding: 16px;
+  }
+  
+  .profile-header {
+    flex-direction: column;
+    text-align: center;
+  }
+  
+  .profile-title {
+    margin: 16px 0;
+  }
+  
+  .edit-button {
+    margin-top: 16px;
+  }
+} 
