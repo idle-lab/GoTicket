@@ -4,31 +4,31 @@ import { CSSTransition } from 'react-transition-group'
 import { CloseOutlined } from '@ant-design/icons'
 import { useNavigate } from 'react-router-dom'
 import { get, post } from '../../utils/request'
-import { useSearchParams } from 'react-router-dom'; 
+import { useSearchParams } from 'react-router-dom'
 import './index.css'
 import { useUser } from '../../contexts/UserContext'
 
 const Login = () => {
-  const [searchParams, setSearchParams] = useSearchParams();
-  const [activeTab, setActiveTab] = useState(searchParams.get('tab') || 'login');
-  const [loading, setLoading] = useState(false);
+  const [searchParams, setSearchParams] = useSearchParams()
+  const [activeTab, setActiveTab] = useState(searchParams.get('tab') || 'login')
+  const [loading, setLoading] = useState(false)
   const navigate = useNavigate()
-  const { updateUserInfo } = useUser();
+  const { updateUserInfo } = useUser()
 
   useEffect(() => {
-    const tab = searchParams.get('tab');
+    const tab = searchParams.get('tab')
     if (tab === 'login' || tab === 'signup') {
-      setActiveTab(tab);
+      setActiveTab(tab)
     }
-  }, [searchParams]);
+  }, [searchParams])
 
   const handleClose = () => {
     navigate('/')
   }
 
   const handleTabChange = (key) => {
-    setActiveTab(key);
-    setSearchParams({ tab: key });
+    setActiveTab(key)
+    setSearchParams({ tab: key })
   }
 
   const renderSignupForm = () => (
@@ -118,59 +118,55 @@ const Login = () => {
   )
 
   const handleLogin = async (values) => {
-    setLoading(true);
+    setLoading(true)
     try {
-      let response;
-      
+      let response
+
       if (activeTab === 'login') {
         response = await get('/token', {
           phone: values.phone.trim(),
-          password: values.password
-        });
+          password: values.password,
+        })
       } else {
-        const formData = new FormData();
-        formData.append('name', values.name.trim());
-        formData.append('sex', values.sex);
-        formData.append('password', values.password);
-        formData.append('phone', values.phone);
-        formData.append('id_number', values.id_number);
+        const formData = new FormData()
+        formData.append('name', values.name.trim())
+        formData.append('sex', values.sex)
+        formData.append('password', values.password)
+        formData.append('phone', values.phone)
+        formData.append('id_number', values.id_number)
 
-        response = await post('/user', formData);
+        response = await post('/user', formData)
       }
 
-      const token = response.headers.authorization;
+      const token = response.headers.authorization
       if (!token) {
-        throw new Error(activeTab === 'login' ? 
-          'Invalid credentials' : 
-          'Registration failed'
-        );
+        throw new Error(activeTab === 'login' ? 'Invalid credentials' : 'Registration failed')
       }
 
-      localStorage.setItem('token', token);
-      
-      const userResponse = await get('/userInfo');
-      updateUserInfo(userResponse.data.data);
-      
-      message.success(activeTab === 'login' ? '登录成功' : '注册成功');
-      navigate(userResponse.data.data.is_admin ? '/admin' : '/');
+      localStorage.setItem('token', token)
 
+      const userResponse = await get('/userInfo')
+      updateUserInfo(userResponse.data.data)
+
+      message.success(activeTab === 'login' ? '登录成功' : '注册成功')
+      navigate(userResponse.data.data.is_admin ? '/admin' : '/')
     } catch (error) {
-      console.error('Error:', error);
-      message.error(error.message);
+      console.error('Error:', error)
+      message.error(error.message)
     } finally {
-      setLoading(false);
+      setLoading(false)
     }
-  };
+  }
 
   return (
     <div className="login-container">
-      <CloseOutlined 
-        className="close-icon" 
+      <CloseOutlined
+        className="close-icon"
         onClick={handleClose}
         style={{
           position: 'absolute',
-          top: '120px',
-          right: '420px',
+          top: '10%',
+          right: '15%',
           fontSize: '24px',
           cursor: 'pointer',
           color: '#2e2e2e',
@@ -180,18 +176,13 @@ const Login = () => {
           alignItems: 'center',
           justifyContent: 'center',
           border: '2px solid #2e2e2e',
-          borderRadius: '50%'
+          borderRadius: '50%',
         }}
       />
 
       <h1 className="login-title">Welcome to GoTicket</h1>
 
-      <Tabs
-        activeKey={activeTab}
-        onChange={handleTabChange}
-        centered
-        className="login-tabs"
-      >
+      <Tabs activeKey={activeTab} onChange={handleTabChange} centered className="login-tabs">
         <Tabs.TabPane tab="LOG IN" key="login" className="login-tab-btn" />
         <Tabs.TabPane tab="SIGN UP" key="signup" className="login-tab-btn" />
       </Tabs>
@@ -223,3 +214,4 @@ const Login = () => {
 }
 
 export default Login
+

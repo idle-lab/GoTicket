@@ -4,8 +4,9 @@ import Login from './pages/login'
 import Top from './components/Top'
 import Bottom from './components/Bottom'
 import Home from './pages/Home'
-import Profile from './pages/profile';
-import { UserProvider } from './contexts/UserContext';
+import Profile from './pages/profile'
+import Admin from './pages/Admin'
+import { UserProvider } from './contexts/UserContext'
 
 const App = () => (
   <UserProvider>
@@ -16,6 +17,7 @@ const App = () => (
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
           <Route path="/profile" element={<Profile />} />
+          <Route path="/admin" element={<Admin />} />
         </Routes>
         <Bottom />
       </div>

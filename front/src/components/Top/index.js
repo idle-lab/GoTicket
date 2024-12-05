@@ -21,10 +21,10 @@ const Top = () => {
               <Link to="/">GoTicket</Link>
             </div>
           </Col>
-          
+
           <Col span={14}>
             <Search
-              placeholder="Search for events, venues, or activities"
+              placeholder="Search for tickets"
               onSearch={handleSearch}
               size="large"
               style={{ width: 500 }}
@@ -47,3 +47,4 @@ const Top = () => {
 }
 
 export default Top
+

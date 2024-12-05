@@ -1,14 +1,131 @@
+.home-container {
+  min-height: 100vh;
+  background-color: #f5f5f5;
+}
+
+.slider-container {
+  width: 100%;
+  margin-bottom: 30px;
+}
+
+.slide {
+  position: relative;
+  height: 400px;
+  overflow: hidden;
+}
+
+.slide-content {
+  position: absolute;
+  top: 50%;
+  left: 10%;
+  transform: translateY(-50%);
+  color: white;
+  z-index: 2;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.slide-content h2 {
+  font-size: 48px;
+  margin-bottom: 20px;
+  color: white;
+}
+
+.slide-content p {
+  font-size: 24px;
+  margin-bottom: 30px;
+}
+
+.slide-bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-size: cover;
+  background-position: center;
+  filter: brightness(0.7);
+}
+
+.slide-bg-1 {
+  background-image: url('https://images.unsplash.com/photo-1530521954074-e64f6810b32d?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2070&q=80');
+}
+
+.slide-bg-2 {
+  background-image: url('https://images.unsplash.com/photo-1532105956626-9569c03602f6?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2070&q=80');
+}
+
+.slide-bg-3 {
+  background-image: url('https://images.unsplash.com/photo-1513026705753-bc3fffca8bf4?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2070&q=80');
+}
+
 .container2 {
   display: flex;
   justify-content: center;
   align-items: center;
+  padding: 20px;
 }
 
 .container2-box {
   width: 100%;
   max-width: 1200px;
-  padding: 0 20px;
-  height: 100vh;
-  box-sizing: border-box; 
+  padding: 20px;
+  box-sizing: border-box;
+  background-color: white;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+}
+
+.searchTitle {
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.searchTab {
+  margin-bottom: 20px;
+}
+
+.searchForm {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* 轮播图导航点样式 */
+.slick-dots {
+  bottom: 25px;
+}
+
+.slick-dots li button:before {
+  color: white;
+  font-size: 12px;
+  opacity: 0.8;
+}
+
+.slick-dots li.slick-active button:before {
+  color: white;
+  opacity: 1;
+}
+
+/* 轮播图箭头样式 */
+.slick-prev,
+.slick-next {
+  z-index: 1;
+  width: 40px;
+  height: 40px;
+}
+
+.slick-prev {
+  left: 20px;
+}
+
+.slick-next {
+  right: 20px;
+}
+
+.slick-prev:before,
+.slick-next:before {
+  font-size: 40px;
 }
 

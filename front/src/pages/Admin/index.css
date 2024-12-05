@@ -1,0 +1,44 @@
+.admin-layout {
+  min-height: calc(100vh - 64px);
+}
+
+.admin-sider {
+  background: white !important;
+  border-right: 1px solid #f0f0f0;
+  overflow: auto;
+  height: 100vh;
+  position: fixed;
+  left: 0;
+  top: 64px;
+  bottom: 0;
+}
+
+.admin-logo {
+  height: 64px;
+  line-height: 64px;
+  text-align: center;
+  font-size: 18px;
+  font-weight: bold;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.admin-menu {
+  border-right: none;
+}
+
+.admin-content {
+  margin-left: 250px;
+  padding: 24px;
+  min-height: calc(100vh - 64px);
+}
+
+.admin-container {
+  background: white;
+  padding: 24px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.admin-container h2 {
+  margin-bottom: 24px;
+}
