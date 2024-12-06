@@ -39,10 +39,21 @@ request.interceptors.response.use(
 
     // 处理后端返回的错误信息
     if (response?.data?.msg) {
-      return Promise.reject(new Error(response.data.msg));
+      let errMsg = response.data.msg;
+      console.log(errMsg);
+      if (errMsg.includes('record not found')) {
+        errMsg = '用户不存在,请先注册';
+      }
+      if (errMsg.includes('invalid phone number')) {
+        errMsg = '手机号格式不正确';
+      }
+      if (errMsg.includes('db error')) {
+        errMsg = '数据库连接失败，请稍后再试';
+      }
+      return Promise.reject(new Error(errMsg));
     }
 
-    return Promise.reject(error);
+    return Promise.reject(error.message || 'Network Error');
   }
 )
 
@@ -62,7 +73,6 @@ export const post = (url, data) => {
         url,
         data,
         headers: {
-          // 如果是 FormData，不要手动设置 Content-Type
           ...(!(data instanceof FormData) && {
             'Content-Type': 'application/json'
           })
