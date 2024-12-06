@@ -1,5 +1,5 @@
 .profile-layout {
-  min-height: calc(100vh - 128px); /* 减去顶部导航的高度 */
+  min-height: calc(100vh - 120px); /* 减去顶部导航的高度 */
   background: #f0f2f5;
 }
 
@@ -10,7 +10,7 @@
   height: 100vh;
   position: fixed;
   left: 0;
-  top: 64px; 
+  top: 64px;
   bottom: 0;
 }
 
@@ -36,7 +36,7 @@
 .profile-content {
   margin-left: 250px;
   padding: 24px;
-  min-height: calc(100vh - 128px);
+  min-height: calc(100vh - 120px);
 }
 
 .profile-card {
@@ -92,22 +92,23 @@
   .profile-sider {
     display: none;
   }
-  
+
   .profile-content {
     margin-left: 0;
     padding: 16px;
   }
-  
+
   .profile-header {
     flex-direction: column;
     text-align: center;
   }
-  
+
   .profile-title {
     margin: 16px 0;
   }
-  
+
   .edit-button {
     margin-top: 16px;
   }
-} 
+}
+
