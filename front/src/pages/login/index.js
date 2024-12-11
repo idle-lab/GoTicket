@@ -14,6 +14,7 @@ const Login = () => {
   const [loading, setLoading] = useState(false)
   const navigate = useNavigate()
   const { updateUserInfo } = useUser()
+  const [coolDown, setcoolDown] = useState(0);
 
   useEffect(() => {
     const tab = searchParams.get('tab')
@@ -21,6 +22,16 @@ const Login = () => {
       setActiveTab(tab)
     }
   }, [searchParams])
+
+  useEffect(() => {
+    let timer;
+    if (coolDown > 0) {
+      timer = setInterval(() => {
+        setcoolDown(prev => prev - 1);
+      }, 1000);
+    }
+    return () => clearInterval(timer);
+  }, [coolDown]);
 
   const handleClose = () => {
     navigate('/')
@@ -118,7 +129,8 @@ const Login = () => {
   )
 
   const handleLogin = async (values) => {
-    setLoading(true)
+    if (loading || coolDown > 0) return;
+    setLoading(true);
     try {
       let response
 
@@ -140,7 +152,7 @@ const Login = () => {
 
       const token = response.headers.authorization
       if (!token) {
-        throw new Error(activeTab === 'login' ? 'Invalid credentials' : 'Registration failed')
+        throw new Error(activeTab === 'login' ? '手机号或密码错误！' : '注册失败！')
       }
 
       localStorage.setItem('token', token)
@@ -152,7 +164,8 @@ const Login = () => {
       navigate(userResponse.data.data.is_admin ? '/admin' : '/')
     } catch (error) {
       console.error('Error:', error)
-      message.error(error.message)
+      message.error(error.message || '操作失败，请稍后重试')
+      setcoolDown(5)
     } finally {
       setLoading(false)
     }
@@ -203,8 +216,21 @@ const Login = () => {
           {activeTab === 'signup' ? renderSignupForm() : renderLoginForm()}
 
           <Form.Item>
-            <Button type="primary" htmlType="submit" block size="large" className="login-btn">
-              {activeTab === 'login' ? 'LOGIN' : 'SIGN UP'}
+            <Button 
+              type="primary" 
+              htmlType="submit" 
+              block 
+              size="large" 
+              className="login-btn"
+              loading={loading}
+              disabled={loading || coolDown > 0}
+            >
+              {loading 
+                ? (activeTab === 'login' ? '登录中...' : '注册中...') 
+                : coolDown > 0
+                  ? `请等待 ${coolDown} 秒`
+                  : (activeTab === 'login' ? 'LOGIN' : 'SIGN UP')
+              }
             </Button>
           </Form.Item>
         </Form>
