@@ -10,7 +10,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func TrainNumberQuery(ctx *gin.Context) {
+func OneWayTicketsQuery(ctx *gin.Context) {
 	req := dto.RouteRequest{}
 	if err := ctx.ShouldBind(&req); err != nil {
 		logger.Warnf("query falied with error: %s", err)
@@ -30,12 +30,18 @@ func TrainNumberQuery(ctx *gin.Context) {
 		return
 	}
 
-	routes = services.TrainsFilter(routes, &req.User_preferences)
+	rv, err := services.HandkeRoutes(routes, &req.User_preferences)
+	if err != nil {
+		ReturnError(ctx, &dto.JsonErrorStruct{
+			Code:    http.StatusBadRequest,
+			Message: fmt.Errorf("routres query failed with error: %s", err),
+		})
+	}
 
 	ReturnSuccess(ctx, &dto.JsonStruct{
 		Code:    http.StatusOK,
 		Message: "OK",
-		Data:    routes,
+		Data:    rv,
 		Count:   len(routes),
 	})
 }

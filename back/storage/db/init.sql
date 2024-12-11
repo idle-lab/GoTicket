@@ -1,4 +1,4 @@
-CREATE DATABASE `goticket`;
+CREATE DATABASE IF NOT EXISTS `goticket`;
 
 USE `goticket`;
 
@@ -29,13 +29,14 @@ CREATE TABLE IF NOT EXISTS `trains` (
 
 CREATE TABLE IF NOT EXISTS `routes` (
   `id` smallint unsigned AUTO_INCREMENT NOT NULL,
+  `name` VARCHAR(31) DEFAULT 'no name route',
   `price_pk` decimal(9, 2)  NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 CREATE TABLE IF NOT EXISTS `stations` (
   `id` smallint unsigned AUTO_INCREMENT NOT NULL,
-  `name` varchar(32) NOT NULL,
+  `name` varchar(31) NOT NULL,
   `postion` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `station_index` (`name`),
@@ -68,8 +69,8 @@ CREATE TABLE IF NOT EXISTS `train_numbers` (
 
 CREATE TABLE IF NOT EXISTS `tickets` (
   `id` int unsigned AUTO_INCREMENT NOT NULL,
-  `start_station` varchar(32) NOT NULL,
-  `end_station` varchar(32) NOT NULL,
+  `start_station` varchar(31) NOT NULL,
+  `end_station` varchar(31) NOT NULL,
   `departure_time` datetime NOT NULL,
   `arrival_time` datetime NOT NULL,
   `carriage` tinyint unsigned NOT NULL,

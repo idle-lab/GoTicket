@@ -12,7 +12,7 @@ func CollectRoute(ser *gin.Engine) *gin.Engine {
 		auth_user_group := auth_group.Group("")
 		{
 			auth_user_group.GET("/userInfo", controllers.GetUserInfo)
-			auth_user_group.POST("trainNumbers", controllers.TrainNumberQuery)
+			auth_user_group.POST("/oneWayTickets", controllers.OneWayTicketsQuery)
 		}
 		auth_admin_group := auth_group.Group("/admin")
 		{
