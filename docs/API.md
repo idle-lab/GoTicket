@@ -48,7 +48,7 @@ Body:
     "code": 0,  // http 状态码
     "msg": "OK",  // 状态信息
     "data": { 
-        "is_admin": ... // 用户是否为管理员
+        "role": ... // 用户的身份，admin/user
     },
     "count": 1  // 返回的数据条数
 }
@@ -77,7 +77,7 @@ Body:
     "code": 200,  // http 状态码
     "msg": "OK",  // http 状态信息
     "data": { 
-        "is_admin": ... // 用户是否为管理员
+        "role": ... // 用户的身份，admin/user
     },
     "count": 1  // 返回的数据条数
 }
@@ -113,7 +113,7 @@ Body:
     "code": 0,  // http 状态码
     "msg": "OK",  // 状态信息
     "data": { 
-        "is_admin": ... // 用户是否为管理员
+        "role": ... // 用户的身份，admin/user
     },
     "count": 1  // 返回的数据条数
 }
@@ -151,7 +151,7 @@ Body:
         "phone": ...,
         "create_date": ...,
         "id_number": ...,
-        "is_admin": ... // 用户是否为管理员
+        "role": ... // 用户的身份，admin/user
     },
     "count": 1  // 返回的数据条数
 }

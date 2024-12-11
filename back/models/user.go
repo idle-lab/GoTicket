@@ -28,8 +28,7 @@ func init() {
 			Id_number:   "",
 			Role:        "admin",
 		}
-		db.DB.Create(default_admin)
-		db.DB.Table("admins").Create(map[string]interface{}{"id": default_admin.ID})
+		db.DB.Table("users").Create(default_admin)
 	}
 }
 
@@ -61,7 +60,6 @@ func (User) GetUserById(id uint32) (*dto.User, error) {
 	user := &dto.User{}
 	if err := db.DB.Table("users").
 		Select("users.id, users.name, users.sex, users.password, users.phone, users.create_date, users.id_number, admins.id IS NOT NULL AS is_admin").
-		Joins("LEFT JOIN admins ON users.id = admins.id").
 		Where("users.id = ?", id).
 		Scan(&user).Error; err != nil {
 		return nil, err

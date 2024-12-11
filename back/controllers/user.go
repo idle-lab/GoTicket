@@ -29,7 +29,7 @@ func JWTAuthMiddleware() gin.HandlerFunc {
 			ctx.Abort()
 			return
 		}
-		ctx.Set("user", user)
+		ctx.Set("role", user)
 	}
 }
 
@@ -72,7 +72,7 @@ func Login(ctx *gin.Context) {
 	ReturnSuccess(ctx, &dto.JsonStruct{
 		Code:    http.StatusOK,
 		Message: "OK",
-		Data:    map[string]interface{}{"is_admin": user.Is_admin},
+		Data:    map[string]interface{}{"role": user.Role},
 		Count:   1,
 	})
 }
@@ -115,7 +115,7 @@ func Register(ctx *gin.Context) {
 	}
 
 	// 生成 token
-	if err := services.GenerateToken(ctx, id, false); err != nil {
+	if err := services.GenerateToken(ctx, id, "admin"); err != nil {
 		ReturnError(ctx, &dto.JsonErrorStruct{
 			Code:    http.StatusBadRequest,
 			Message: err,
@@ -125,16 +125,16 @@ func Register(ctx *gin.Context) {
 	ReturnSuccess(ctx, &dto.JsonStruct{
 		Code:    http.StatusOK,
 		Message: "OK",
-		Data:    map[string]interface{}{"is_admin": false},
+		Data:    map[string]interface{}{"role": "user"},
 		Count:   1,
 	})
 }
 
 func AdminRegister(ctx *gin.Context) {
 	// 判断调用 api 的用户是否为管理员，只要管理员可以添加管理员
-	value, _ := ctx.Get("user")
+	value, _ := ctx.Get("role")
 	admin := value.(*dto.User)
-	if !admin.Is_admin {
+	if admin.Role != "admin" {
 		ReturnError(ctx, &dto.JsonErrorStruct{
 			Code:    http.StatusBadRequest,
 			Message: "you are not an admin",
@@ -187,7 +187,7 @@ func AdminRegister(ctx *gin.Context) {
 	ReturnSuccess(ctx, &dto.JsonStruct{
 		Code:    http.StatusOK,
 		Message: "OK",
-		Data:    map[string]interface{}{"is_admin": true},
+		Data:    map[string]interface{}{"role": "admin"},
 		Count:   1,
 	})
 }
