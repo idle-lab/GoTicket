@@ -21,9 +21,9 @@ type TrainNumber struct {
 	Status              string
 	Available_seats     uint16
 	Start_time          time.Time
-	dwell_time_per_stop string
-	train_id            uint16
-	route_id            uint16
+	Dwell_time_per_stop string
+	Train_id            uint16
+	Route_id            uint16
 }
 
 /*
@@ -46,7 +46,14 @@ Route 路线信息
 */
 type Route struct {
 	ID       uint16          `json:"route_id"`
+	Name     string          `json:"name"`
 	Price_pk decimal.Decimal `json:"price_pk"`
+}
+
+type RouteStation struct {
+	Route_id            uint16  `josn:"route_id"`
+	Station_id          uint16  `json:"station_id"`
+	Distance_from_start float64 `json:"distance_from_start"`
 }
 
 type AvailableRoute struct {
@@ -104,12 +111,6 @@ func NewPreferences() *Preferences {
 	pre.Arrival_time_after = time.Now()
 	pre.Arrival_time_before = time.Now().Add(22 * Day)
 	return pre
-}
-
-type RouteRequest struct {
-	Start_station    string      `json:"start_station"`
-	End_station      string      `json:"end_station"`
-	User_preferences Preferences `json:"preferences"`
 }
 
 type TrainNumberInfo struct {

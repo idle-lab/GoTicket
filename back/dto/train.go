@@ -14,10 +14,10 @@ Train 列车信息
 - TrainNumbers：该列车所有的车次
 */
 type Train struct {
-	ID            uint16        `gorm:"type:smallint unsigned;auto_increment"`
-	Train_type    string        `gorm:"type:enum('G','D','K');not null"`
-	Max_capacity  uint16        `gorm:"type:smallint unsigned;not null"`
-	Seats         string        `gorm:"type:json;not null"`
-	Avg_speed     float32       `gorm:"not null"`
-	Train_numbers []TrainNumber `gorm:"foreignKey:TrainID"`
+	ID           uint16
+	Name         string
+	Train_type   string
+	Max_capacity uint16
+	Seats        string
+	Avg_speed    float32
 }

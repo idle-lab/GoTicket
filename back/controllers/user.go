@@ -57,6 +57,7 @@ func Login(ctx *gin.Context) {
 	// 获取识别用户的消息
 	phone := ctx.Query("phone")
 	if ok, err := regexp.MatchString(`^\d+$`, phone); (!ok || err != nil) && phone != config.DEFAULT_ADMIN {
+		logger.Infof("login failed with invalid phone number: %s.\n", err)
 		ReturnError(ctx, &dto.JsonErrorStruct{
 			Code:    http.StatusBadRequest,
 			Message: "invalid phone number",
@@ -80,6 +81,7 @@ func Login(ctx *gin.Context) {
 func Register(ctx *gin.Context) {
 	user, err := services.GetUserInfoFromRequest(ctx)
 	if err != nil {
+		logger.Infof("login failed with invalid user info: %s.\n", err)
 		ReturnError(ctx, &dto.JsonErrorStruct{
 			Code:    http.StatusBadRequest,
 			Message: err,
@@ -90,8 +92,9 @@ func Register(ctx *gin.Context) {
 	// 判断用户是否已经存在
 	ok, err := models.User{}.IsUserExists(user.Phone)
 	if ok {
+		logger.Infof("this phone has already been registered: %s.\n", user.Phone)
 		ReturnError(ctx, &dto.JsonErrorStruct{
-			Code:    http.StatusBadRequest,
+			Code:    http.StatusOK,
 			Message: "this phone has already been registered",
 		})
 		return

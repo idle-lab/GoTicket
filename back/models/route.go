@@ -89,10 +89,19 @@ WHERE
     train_numbers.status = 1;
 `
 
-// func (Route) GetRouteById(route_id uint16) (*dto.Route, error) {
-// 	route = &dto.Route{ID: route_id}
-// 	if err != db.DB.Table("routes").Select()
-// }
+func (Route) AddRoute(route *dto.Route) error {
+	if err := db.DB.Table("routes").Create(route).Error; err != nil {
+		return err
+	}
+	return nil
+}
+
+func (Route) AddRouteStation(route_station *dto.RouteStation) error {
+	if err := db.DB.Table("route_station").Create(route_station).Error; err != nil {
+		return err
+	}
+	return nil
+}
 
 func (Route) GetRoutesByStationId(start uint16, end uint16) ([]dto.AvailableRoute, error) {
 	routes := make([]dto.AvailableRoute, 0)
@@ -100,4 +109,15 @@ func (Route) GetRoutesByStationId(start uint16, end uint16) ([]dto.AvailableRout
 		return nil, err
 	}
 	return routes, nil
+}
+
+func (Route) GetRoute(cols string, where string, args ...interface{}) (*dto.Route, error) {
+	route := &dto.Route{}
+	if err := db.DB.Table("routes").
+		Select(cols).
+		Where(where, args).
+		Scan(route).Error; err != nil {
+		return nil, err
+	}
+	return route, nil
 }

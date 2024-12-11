@@ -76,13 +76,14 @@ func (User) AddUser(user *dto.User) (uint32, error) {
 		Phone:       user.Phone,
 		Create_date: user.Create_date,
 		Id_number:   user.Id_number,
+		Role:        "user",
 	}
 	err := db.DB.Create(&new_user).Error
 	return new_user.ID, err
 }
 
 func (Admin) AddAdmin(user *dto.User) error {
-	admin := &dto.Admin{ID: user.ID}
-	err := db.DB.Table("admins").Create(admin).Error
+	admin := &dto.User{Role: "admin"}
+	err := db.DB.Table("users").Create(admin).Error
 	return err
 }

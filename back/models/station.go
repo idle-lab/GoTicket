@@ -7,6 +7,13 @@ import (
 
 type Station struct{}
 
+func (Station) AddStation(station *dto.Station) error {
+	if err := db.DB.Table("stations").Create(station).Error; err != nil {
+		return err
+	}
+	return nil
+}
+
 func (Station) GetStations(postion string) ([]uint16, error) {
 	sts := make([]uint16, 0)
 	if err := db.DB.Table("stations").
@@ -21,7 +28,7 @@ func (Station) GetStations(postion string) ([]uint16, error) {
 func (Station) GetStationsByIds(station_ids []uint16) ([]dto.Station, error) {
 	sts := make([]dto.Station, 0)
 	if err := db.DB.Table("stations").
-		Select("stations.name, stations.postion").
+		Select("stations.id, stations.name, stations.postion").
 		Where("stations.id IN ?", station_ids).
 		Scan(&sts).Error; err != nil {
 		return nil, err

@@ -45,7 +45,7 @@ Body:
 
 ```json
 {
-    "code": 0,  // http 状态码
+    "code": 200,  // http 状态码
     "msg": "OK",  // 状态信息
     "data": { 
         "role": ... // 用户的身份，admin/user
@@ -112,7 +112,7 @@ Body:
 
 ```json
 {
-    "code": 0,  // http 状态码
+    "code": 200,  // http 状态码
     "msg": "OK",  // 状态信息
     "data": { 
         "role": ... // 用户的身份，admin/user
@@ -163,6 +163,156 @@ Body:
 
 一下这些 API 和 车票查询相关
 
+### 添加车站
+
+这个 API 需要管理员权限，你需要提供车站所在的城市，以及车站的名字。
+
+**请求：**
+
+URL: `/station`
+
+Method：`POST`
+
+Header:需要登录时获得的 token
+
+`Authorization`: token
+
+Body：以 json 格式给出路线名字，路线经过的车站
+
+```json
+{
+    "name": string, // 车站名
+    "postion": string // 车站所在城市
+}
+```
+
+**服务器响应：**
+
+```json
+{
+    "code": 200,  // http 状态码
+    "msg": "OK",  // 状态信息
+    "count": 0  // 返回的数据条数
+}
+```
+
+### 添加路线
+
+这个 API 需要管理员权限，你需要提供路线的名字，路线所经过车站的车站名，该路线每km的价格，以及每站到起点站的距离。
+
+**请求：**
+
+URL: `/route`
+
+Method：`POST`
+
+Header:需要登录时获得的 token
+
+`Authorization`: token
+
+Body：以 json 格式给出路线名字，路线经过的车站
+
+```json
+{
+    "name": string, // 这条路线的名字，可以不提供
+    "stations": [string...], // 经过的所有车站名
+    "price_pk": float, // 单位：元/km
+    "distance_from_start": [float...] // 每站到起点站的距离。
+}
+```
+
+**服务器响应：**
+
+```json
+{
+    "code": 200,  // http 状态码
+    "msg": "OK",  // 状态信息
+    "count": 0  // 返回的数据条数
+}
+```
+
+
+
+### 添加列车
+
+这个 API 需要管理员权限，你需要提供列车的类型（高铁、动车或普通火车），列车最大容量，座位布局，平局速度。
+
+对于列车布局，这是一个二维数组，第一维表示车厢号，第二维表示座位列号，数字表示该列还剩几个座位，例如：`seats[6][2]`，表示 7 号车厢，第 3 列还剩下的座位数，因为数组下标从 0 开始，所以要 加一。
+
+通常用户不会很在意自己所在行，更在意所在列，大部分喜欢坐窗边或过道，所以我们提供每个车厢每列的个数，方便运算。
+
+**请求：**
+
+URL: `/train`
+
+Method：`POST`
+
+Header:需要登录时获得的 token
+
+`Authorization`: token
+
+Body：以 json 格式给出路线名字，路线经过的车站
+
+```json
+{
+    "name": string, // 列车名，如：复兴号CR400
+    "train_type": string, // 列车的类型，取值为（'G','D','K'）
+    "max_capacity": int, // 列车最大容量
+    "seats": [[int...]...], // 座位布局
+    "avg_speed": float // 平均速度，单位 m/s
+}
+```
+
+
+
+**服务器响应：**
+
+```json
+{
+    "code": 200,  // http 状态码
+    "msg": "OK",  // 状态信息
+    "count": 0  // 返回的数据条数
+}
+```
+
+### 添加车次
+
+这个 API 需要管理员权限，你需要提供车次的车次号，状态，车次执行时间，该车次每站的停留时间，车次开始时间，执行该车次的列车名，该车次执行的路线名。
+
+**请求：**
+
+URL: `/trainNumber`
+
+Method：`POST`
+
+Header:需要登录时获得的 token
+
+`Authorization`: token
+
+Body：以 json 格式给出路线名字，路线经过的车站
+
+```json
+{
+    "code": string, // 车次号
+    "status": string, // 车次状态，enum('Online','Offline')
+    "start_time": string, // 车次开始时间，格式：YYYY-MM-DD HH:mm
+    "dwell_time_per_stop": [[int...]...], // 每站停留时间，单位 min
+    "train_name": string, // 执行该车次的列车名
+    "route_name": string, // 该车次执行的路线名
+}
+```
+
+
+
+**服务器响应：**
+
+```json
+{
+    "code": 200,  // http 状态码
+    "msg": "OK",  // 状态信息
+    "count": 0  // 返回的数据条数
+}
+```
 
 ### 单程车票查询
 
