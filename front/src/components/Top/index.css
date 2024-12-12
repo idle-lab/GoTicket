@@ -1,4 +1,4 @@
-.container {
+.container1 {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -7,7 +7,7 @@
   height: 60px; /* 固定高度 */
 }
 
-.container-box {
+.container1-box {
   width: 100%;
   max-width: 1200px;
   padding: 0 20px;

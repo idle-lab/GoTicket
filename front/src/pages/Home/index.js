@@ -1,99 +1,226 @@
-import React from 'react'
-import './index.css'
-import { Tabs, Input, Button, DatePicker, Select } from 'antd'
-import Slider from 'react-slick'
-import "slick-carousel/slick/slick.css"
-import "slick-carousel/slick/slick-theme.css"
-
-const { RangePicker } = DatePicker
-const { Option } = Select
-
-const onChange = (key) => {
-  console.log(key)
-}
-
-const items = [
-  {
-    key: '1',
-    label: '往返',
-    children: '往返内容',
-  },
-  {
-    key: '2',
-    label: '单程',
-    children: '单程内容',
-  },
-  {
-    key: '3',
-    label: '多程',
-    children: '多程内容',
-  },
-]
-
+import { Card } from 'antd'
+import { Cascader, Typography, Flex } from 'antd'
+import React, { useEffect, useState } from 'react'
 export default function Home() {
-  const settings = {
-    dots: true,
-    infinite: true,
-    speed: 500,
-    slidesToShow: 1,
-    slidesToScroll: 1,
-    autoplay: true,
-    autoplaySpeed: 3000,
+  const bgImage = 'https://s3.bmp.ovh/imgs/2024/12/12/e5ed90a02e914e29.webp'
+  const options = [
+    {
+      value: 'zhejiang',
+      label: 'Zhejiang',
+      children: [
+        {
+          value: 'hangzhou',
+          label: 'Hangzhou',
+        },
+        {
+          value: 'ningbo',
+          label: 'Ningbo',
+        },
+        {
+          value: 'wenzhou',
+          label: 'Wenzhou',
+        },
+      ],
+    },
+    {
+      value: 'shanghai',
+      label: 'Shanghai',
+    },
+    {
+      value: 'guangdong',
+      label: 'Guangdong',
+      children: [
+        {
+          value: 'guangzhou',
+          label: 'Guangzhou',
+        },
+        {
+          value: 'shenzhen',
+          label: 'Shenzhen',
+        },
+        {
+          value: 'foshan',
+          label: 'Foshan',
+        },
+      ],
+    },
+    {
+      value: 'beijing',
+      label: 'Beijing',
+    },
+    {
+      value: 'tianjin',
+      label: 'Tianjin',
+    },
+    {
+      value: 'jiangsu',
+      label: 'Jiangsu',
+      children: [
+        {
+          value: 'nanjing',
+          label: 'Nanjing',
+        },
+        {
+          value: 'suzhou',
+          label: 'Suzhou',
+        },
+        {
+          value: 'wuxi',
+          label: 'Wuxi',
+        },
+      ],
+    },
+    {
+      value: 'hunan',
+      label: 'Hunan',
+      children: [
+        {
+          value: 'changsha',
+          label: 'Changsha',
+        },
+        {
+          value: 'xiangtan',
+          label: 'Xiangtan',
+        },
+      ],
+    },
+    {
+      value: 'sichuan',
+      label: 'Sichuan',
+      children: [
+        {
+          value: 'chengdu',
+          label: 'Chengdu',
+        },
+        {
+          value: 'mianyang',
+          label: 'Mianyang',
+        },
+      ],
+    },
+    {
+      value: 'fujian',
+      label: 'Fujian',
+      children: [
+        {
+          value: 'xiamen',
+          label: 'Xiamen',
+        },
+        {
+          value: 'quanzhou',
+          label: 'Quanzhou',
+        },
+      ],
+    },
+    {
+      value: 'jiangxi',
+      label: 'Jiangxi',
+      children: [
+        {
+          value: 'nanchang',
+          label: 'Nanchang',
+        },
+        {
+          value: 'jingdezhen',
+          label: 'Jingdezhen',
+        },
+      ],
+    },
+    {
+      value: 'henan',
+      label: 'Henan',
+      children: [
+        {
+          value: 'zhengzhou',
+          label: 'Zhengzhou',
+        },
+        {
+          value: 'luoyang',
+          label: 'Luoyang',
+        },
+      ],
+    },
+    {
+      value: 'liaoning',
+      label: 'Liaoning',
+      children: [
+        {
+          value: 'shenyang',
+          label: 'Shenyang',
+        },
+        {
+          value: 'dalian',
+          label: 'Dalian',
+        },
+      ],
+    },
+  ]
+
+  const onChange = (value, selectedOptions) => {
+    console.log(value, selectedOptions)
   }
+  const filter = (inputValue, path) =>
+    path.some((option) => option.label.toLowerCase().indexOf(inputValue.toLowerCase()) > -1)
 
   return (
-    <div className="home-container">
-      <div className="slider-container">
-        <Slider {...settings}>
-          <div className="slide">
-            <div className="slide-content">
-              <h2>春季特惠</h2>
-              <p>多条热门线路低至5折</p>
-              <Button type="primary" size="large">立即抢购</Button>
-            </div>
-            <div className="slide-bg slide-bg-1"></div>
+    <div>
+      <div style={{ backgroundImage: `url(${bgImage})` }} className="w-full bg-cover bg-center">
+        <div className="h-36"></div>
+        <div className="flex justify-center">
+          <div className="text-5xl text-slate-50 pb-8 font-bold w-3/5 ">
+            Book China High-speed Train Tickets Online
           </div>
-          <div className="slide">
-            <div className="slide-content">
-              <h2>暑期出行计划</h2>
-              <p>早订早优惠，最高立减500元</p>
-              <Button type="primary" size="large">查看详情</Button>
-            </div>
-            <div className="slide-bg slide-bg-2"></div>
+        </div>
+        <div className="flex justify-center">
+          <div className="text-4xl text-slate-50 pb-8 font-bold w-3/5 ">
+            Search high-speed train fares, routes, and timetables
           </div>
-          <div className="slide">
-            <div className="slide-content">
-              <h2>商务出行优选</h2>
-              <p>高铁商务座特惠</p>
-              <Button type="primary" size="large">了解更多</Button>
-            </div>
-            <div className="slide-bg slide-bg-3"></div>
-          </div>
-        </Slider>
-      </div>
-
-      <div className="container2">
-        <div className="container2-box">
-          <div className="searchTitle">搜索车票</div>
-          <div className="searchTab">
-            <Tabs defaultActiveKey="1" items={items} onChange={onChange} />
-          </div>
-          <div className="searchForm">
-            <Input.Group compact>
-              <Input style={{ width: '20%' }} placeholder="出发地" />
-              <Input style={{ width: '20%' }} placeholder="目的地" />
-              <RangePicker style={{ width: '30%' }} />
-              <Select defaultValue="economy" style={{ width: '15%' }}>
-                <Option value="economy">经济舱</Option>
-                <Option value="premium">高端经济舱</Option>
-                <Option value="business">商务舱</Option>
-                <Option value="first">头等舱</Option>
-              </Select>
-              <Button type="primary" style={{ width: '15%' }}>
-                搜索
-              </Button>
-            </Input.Group>
-          </div>
+        </div>
+        <div className="flex justify-center items-center">
+          <Card className="w-3/5 ">
+            <Flex gap="large">
+              <div>
+                <Typography.Title level={5}>From</Typography.Title>
+                <Cascader
+                  size="large"
+                  options={options}
+                  onChange={onChange}
+                  placeholder="Please select"
+                  showSearch={{
+                    filter,
+                  }}
+                  onSearch={(value) => console.log(value)}
+                />
+              </div>
+              <div>
+                <Typography.Title level={5}>To</Typography.Title>
+                <Cascader
+                  size="large"
+                  options={options}
+                  onChange={onChange}
+                  placeholder="Please select"
+                  showSearch={{
+                    filter,
+                  }}
+                  onSearch={(value) => console.log(value)}
+                />
+              </div>
+              <div className="w-56"></div>
+              <div>
+                <Typography.Title level={5}>From</Typography.Title>
+                <Cascader
+                  size="large"
+                  options={options}
+                  onChange={onChange}
+                  placeholder="Please select"
+                  showSearch={{
+                    filter,
+                  }}
+                  onSearch={(value) => console.log(value)}
+                />
+              </div>
+            </Flex>
+          </Card>
         </div>
       </div>
     </div>

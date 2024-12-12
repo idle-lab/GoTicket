@@ -4,8 +4,8 @@ const { Text } = Typography
 
 const Bottom = () => {
   return (
-    <div className="container">
-      <div className="container-box">
+    <div className="container1">
+      <div className="container1-box">
         <Row type="flex" justify="center" align="middle">
           <Col span={12} offset={10}>
             <Text>Copyright@GoTicket</Text>
