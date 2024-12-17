@@ -15,7 +15,7 @@ import (
 
 func AddTrainNumber(ctx *gin.Context) {
 	tn := dto.AddTrainNumberRequest{}
-	if err := ctx.ShouldBind(tn); err != nil {
+	if err := ctx.ShouldBind(&tn); err != nil {
 		logger.Infof("parse train number info failed with err:%s", err)
 		ReturnError(ctx, &dto.JsonErrorStruct{
 			Code:    http.StatusBadRequest,

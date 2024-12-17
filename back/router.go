@@ -13,6 +13,10 @@ func CollectRoute(ser *gin.Engine) *gin.Engine {
 		{
 			auth_user_group.GET("/userInfo", controllers.GetUserInfo)
 			auth_user_group.POST("/oneWayTickets", controllers.OneWayTicketsQuery)
+			auth_user_group.POST("/route", controllers.AddRoute)
+			auth_user_group.POST("/train", controllers.AddTrain)
+			auth_user_group.POST("/station", controllers.AddStation)
+			auth_user_group.POST("/train_number", controllers.AddTrainNumber)
 		}
 		auth_admin_group := auth_group.Group("/admin")
 		{

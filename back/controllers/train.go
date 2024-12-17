@@ -13,7 +13,7 @@ import (
 
 func AddTrain(ctx *gin.Context) {
 	train := dto.AddTrainRequest{}
-	if err := ctx.ShouldBind(train); err != nil {
+	if err := ctx.ShouldBind(&train); err != nil {
 		logger.Infof("parse train info failed with err:%s", err)
 		ReturnError(ctx, &dto.JsonErrorStruct{
 			Code:    http.StatusBadRequest,

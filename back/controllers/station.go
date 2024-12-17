@@ -12,7 +12,7 @@ import (
 
 func AddStation(ctx *gin.Context) {
 	req := dto.Station{}
-	if err := ctx.ShouldBind(req); err != nil {
+	if err := ctx.ShouldBind(&req); err != nil {
 		logger.Infof("parse station info failed with err:%s", err)
 		ReturnError(ctx, &dto.JsonErrorStruct{
 			Code:    http.StatusBadRequest,

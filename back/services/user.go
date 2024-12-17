@@ -24,7 +24,7 @@ func Authentication(ctx *gin.Context, phone string, password string) (*dto.User,
 	}
 	if user.Password != password {
 		return user, &dto.JsonErrorStruct{
-			Code:    http.StatusOK,
+			Code:    http.StatusBadRequest,
 			Message: "phone or password is incorrect",
 		}
 	}

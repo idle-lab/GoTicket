@@ -29,7 +29,7 @@ func JWTAuthMiddleware() gin.HandlerFunc {
 			ctx.Abort()
 			return
 		}
-		ctx.Set("role", user)
+		ctx.Set("user", user)
 	}
 }
 
@@ -94,7 +94,7 @@ func Register(ctx *gin.Context) {
 	if ok {
 		logger.Infof("this phone has already been registered: %s.\n", user.Phone)
 		ReturnError(ctx, &dto.JsonErrorStruct{
-			Code:    http.StatusOK,
+			Code:    http.StatusBadRequest,
 			Message: "this phone has already been registered",
 		})
 		return
@@ -107,7 +107,7 @@ func Register(ctx *gin.Context) {
 	}
 
 	// 将信息添加进用户表中
-	id, err := models.User{}.AddUser(user)
+	err = models.User{}.AddUser(user)
 	if err != nil {
 		logger.Errorf("add user to database failed with err: %s", err)
 		ReturnError(ctx, &dto.JsonErrorStruct{
@@ -118,7 +118,7 @@ func Register(ctx *gin.Context) {
 	}
 
 	// 生成 token
-	if err := services.GenerateToken(ctx, id, "admin"); err != nil {
+	if err := services.GenerateToken(ctx, user.ID, "admin"); err != nil {
 		ReturnError(ctx, &dto.JsonErrorStruct{
 			Code:    http.StatusBadRequest,
 			Message: err,
@@ -135,7 +135,7 @@ func Register(ctx *gin.Context) {
 
 func AdminRegister(ctx *gin.Context) {
 	// 判断调用 api 的用户是否为管理员，只要管理员可以添加管理员
-	value, _ := ctx.Get("role")
+	value, _ := ctx.Get("user")
 	admin := value.(*dto.User)
 	if admin.Role != "admin" {
 		ReturnError(ctx, &dto.JsonErrorStruct{
@@ -156,7 +156,27 @@ func AdminRegister(ctx *gin.Context) {
 
 	// 判断用户是否已经存在
 	ok, err := models.User{}.IsUserExists(new_admin.Phone)
-	if !ok {
+	if ok {
+		// 已经是管理员了
+		if new_admin.Role == "admin" {
+			ReturnSuccess(ctx, &dto.JsonStruct{
+				Code:    http.StatusOK,
+				Message: "OK",
+				Data:    map[string]interface{}{"role": "admin"},
+				Count:   1,
+			})
+			return
+		}
+		err = models.Admin{}.ChangeToAdmin(new_admin)
+		if err != nil {
+			logger.Errorf("change user to admin failed with err: %s", err)
+			ReturnError(ctx, &dto.JsonErrorStruct{
+				Code:    http.StatusBadRequest,
+				Message: "change user to admin failed",
+			})
+			return
+		}
+	} else {
 		if err != nil && !gorm.IsRecordNotFoundError(err) {
 			ReturnError(ctx, &dto.JsonErrorStruct{
 				Code:    http.StatusBadRequest,
@@ -164,29 +184,18 @@ func AdminRegister(ctx *gin.Context) {
 			})
 			return
 		}
-		// 如果用户不存在，先创建一个用户再将其添加进管理员表中
-		id, err := models.User{}.AddUser(new_admin)
+		// 将信息添加进管理员表中
+		err = models.Admin{}.AddAdmin(new_admin)
 		if err != nil {
-			logger.Errorf("add user to database failed with err: %s", err)
+			logger.Errorf("add admin to database failed with err: %s", err)
 			ReturnError(ctx, &dto.JsonErrorStruct{
 				Code:    http.StatusBadRequest,
-				Message: fmt.Sprintf("add user failed with err: %s", err),
+				Message: "add admin failed",
 			})
 			return
 		}
-		new_admin.ID = id
 	}
 
-	// 将信息添加进管理员表中
-	err = models.Admin{}.AddAdmin(new_admin)
-	if err != nil {
-		logger.Errorf("add user to database failed with err: %s", err)
-		ReturnError(ctx, &dto.JsonErrorStruct{
-			Code:    http.StatusInternalServerError,
-			Message: fmt.Sprintf("add user failed with err: %s", err),
-		})
-		return
-	}
 	ReturnSuccess(ctx, &dto.JsonStruct{
 		Code:    http.StatusOK,
 		Message: "OK",
