@@ -19,6 +19,7 @@
     "react-slick": "^0.30.2",
     "react-transition-group": "^4.4.5",
     "slick-carousel": "^1.8.1",
+    "swiper": "^11.1.15",
     "web-vitals": "^2.1.4"
   },
   "scripts": {

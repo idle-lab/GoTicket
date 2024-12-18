@@ -1,0 +1,25 @@
+/* 其他需要的自定义样式 */
+.swiper-slide {
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+}
+
+.swiper-button-prev {
+  left: -5px; /* 向左移出滑块区域 */
+}
+
+.swiper-button-next {
+  right: -5px; /* 向右移出滑块区域 */
+}
+
+.custom-card {
+  padding: 0px;
+}
+
+.swiper-button-prev::after,
+.swiper-button-next::after {
+  font-size: 18px; /* 调整箭头图标大小 */
+}

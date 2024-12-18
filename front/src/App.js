@@ -6,6 +6,8 @@ import Bottom from './components/Bottom'
 import Home from './pages/Home'
 import Profile from './pages/profile'
 import Admin from './pages/Admin'
+import TrainRoute from './pages/TrainRoute'
+import Booking from './pages/Booking'
 import { UserProvider } from './contexts/UserContext'
 
 const App = () => (
@@ -18,6 +20,8 @@ const App = () => (
           <Route path="/login" element={<Login />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/admin" element={<Admin />} />
+          <Route path="/routes" element={<TrainRoute />} />
+          <Route path="/booking" element={<Booking />} />
         </Routes>
         <Bottom />
       </div>
