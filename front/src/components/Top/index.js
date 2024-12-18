@@ -13,8 +13,8 @@ const Top = () => {
   }
 
   return (
-    <div className="container">
-      <div className="container-box">
+    <div className="container1">
+      <div className="container1-box">
         <Row align="middle">
           <Col span={4}>
             <div className="logo">

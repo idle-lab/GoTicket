@@ -1,101 +1,107 @@
+import { Card } from 'antd'
+import { Typography, Space, Divider } from 'antd'
+import {
+  BookOutlined,
+  RocketOutlined,
+  TagOutlined,
+  ShoppingCartOutlined,
+  ClockCircleOutlined,
+  MobileOutlined,
+} from '@ant-design/icons'
 import React from 'react'
-import './index.css'
-import { Tabs, Input, Button, DatePicker, Select } from 'antd'
-import Slider from 'react-slick'
-import "slick-carousel/slick/slick.css"
-import "slick-carousel/slick/slick-theme.css"
-
-const { RangePicker } = DatePicker
-const { Option } = Select
-
-const onChange = (key) => {
-  console.log(key)
-}
-
-const items = [
-  {
-    key: '1',
-    label: '往返',
-    children: '往返内容',
-  },
-  {
-    key: '2',
-    label: '单程',
-    children: '单程内容',
-  },
-  {
-    key: '3',
-    label: '多程',
-    children: '多程内容',
-  },
-]
+import { Col, Row } from 'antd'
+import ServiceCard from './ServiceCard'
+import FAQs from './FAQs/FAQs'
+import HotRoutes from './HotRoutes'
+import TrainSearch from '../TrainSearch'
 
 export default function Home() {
-  const settings = {
-    dots: true,
-    infinite: true,
-    speed: 500,
-    slidesToShow: 1,
-    slidesToScroll: 1,
-    autoplay: true,
-    autoplaySpeed: 3000,
-  }
+  const bgImage = 'https://s3.bmp.ovh/imgs/2024/12/12/e5ed90a02e914e29.webp'
 
   return (
-    <div className="home-container">
-      <div className="slider-container">
-        <Slider {...settings}>
-          <div className="slide">
-            <div className="slide-content">
-              <h2>春季特惠</h2>
-              <p>多条热门线路低至5折</p>
-              <Button type="primary" size="large">立即抢购</Button>
-            </div>
-            <div className="slide-bg slide-bg-1"></div>
+    <div>
+      {/* { 有背景的 } */}
+      <div
+        className="w-full bg-cover bg-center rounded-b-3xl bg-blue-500"
+      >
+        <div className="h-28"></div>
+        <div className="flex justify-center">
+          <div className="text-5xl text-slate-50 pb-8 font-bold w-4/5 ">
+            Book China High-speed Train Tickets Online
           </div>
-          <div className="slide">
-            <div className="slide-content">
-              <h2>暑期出行计划</h2>
-              <p>早订早优惠，最高立减500元</p>
-              <Button type="primary" size="large">查看详情</Button>
-            </div>
-            <div className="slide-bg slide-bg-2"></div>
+        </div>
+        <div className="flex justify-center">
+          <div className="text-4xl text-slate-50 pb-8 font-bold w-4/5 ">
+            Search high-speed train fares, routes, and timetables
           </div>
-          <div className="slide">
-            <div className="slide-content">
-              <h2>商务出行优选</h2>
-              <p>高铁商务座特惠</p>
-              <Button type="primary" size="large">了解更多</Button>
-            </div>
-            <div className="slide-bg slide-bg-3"></div>
-          </div>
-        </Slider>
-      </div>
+        </div>
+        <div className="flex justify-center items-center">
+          <TrainSearch />
+        </div>
 
-      <div className="container2">
-        <div className="container2-box">
-          <div className="searchTitle">搜索车票</div>
-          <div className="searchTab">
-            <Tabs defaultActiveKey="1" items={items} onChange={onChange} />
-          </div>
-          <div className="searchForm">
-            <Input.Group compact>
-              <Input style={{ width: '20%' }} placeholder="出发地" />
-              <Input style={{ width: '20%' }} placeholder="目的地" />
-              <RangePicker style={{ width: '30%' }} />
-              <Select defaultValue="economy" style={{ width: '15%' }}>
-                <Option value="economy">经济舱</Option>
-                <Option value="premium">高端经济舱</Option>
-                <Option value="business">商务舱</Option>
-                <Option value="first">头等舱</Option>
-              </Select>
-              <Button type="primary" style={{ width: '15%' }}>
-                搜索
-              </Button>
-            </Input.Group>
+        <div className="flex justify-center items-center mt-8">
+          <Card className="w-4/5">
+            <div className="flex justify-around items-center">
+              <Space align="center" className="cursor-pointer hover:shadow-md">
+                <BookOutlined />
+                <Typography.Text className="font-bold">My Bookings</Typography.Text>
+              </Space>
+              <Divider type="vertical" />
+              <Space align="center" className="cursor-pointer hover:shadow-md">
+                <RocketOutlined />
+                <Typography.Text className="font-bold">Train Guide</Typography.Text>
+              </Space>
+            </div>
+          </Card>
+        </div>
+        <div className="h-5"></div>
+      </div>
+      {/* {why booking} */}
+      <div>
+        <div className="flex justify-center mt-11">
+          <div className="pb-8 font-bold w-4/5 ">
+            <Typography.Title level={1}>Why Book High-speed Trains on Goticket?</Typography.Title>
+            <Row
+              gutter={[16, 16]}
+              justify="center"
+              style={{ display: 'flex', alignItems: 'stretch' }}
+            >
+              <Col span={6} style={{ display: 'flex' }}>
+                <ServiceCard
+                  icon={<TagOutlined style={{ fontSize: '40px', color: '#ffa900' }} />}
+                  title="24/7 Ticketing Service"
+                  description="24/7 ticketing service, convenient for booking tickets anytime"
+                />
+              </Col>
+              <Col span={6} style={{ display: 'flex' }}>
+                <ServiceCard
+                  icon={<ShoppingCartOutlined style={{ fontSize: '40px', color: '#06aebd' }} />}
+                  title="Reserve Seats in Advance"
+                  description="Reserve your seats in advance, faster than most platforms!"
+                />
+              </Col>
+              <Col span={6} style={{ display: 'flex' }}>
+                <ServiceCard
+                  icon={<ClockCircleOutlined style={{ fontSize: '40px', color: '#ffa900' }} />}
+                  title="Book in 3 Minutes, Tickets Issued in 10 Minutes"
+                  description="Complete booking within 3 minutes, get your tickets issued within 10 minutes, and travel worry-free"
+                />
+              </Col>
+              <Col span={6} style={{ display: 'flex' }}>
+                <ServiceCard
+                  icon={<MobileOutlined style={{ fontSize: '40px', color: '#06aebd' }} />}
+                  title="E-tickets Available"
+                  description="E-tickets on your phone for contactless travel"
+                />
+              </Col>
+            </Row>
           </div>
         </div>
       </div>
+      {/* {热门的票} */}
+      <HotRoutes />
+      {/* {China High-speed Train FAQ} */}
+      <FAQs />
     </div>
   )
 }
