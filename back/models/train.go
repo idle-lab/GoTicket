@@ -15,13 +15,12 @@ func (Train) AddTrain(train *dto.Train) error {
 }
 
 func (Train) GetTrainByName(name string) (*dto.Train, error) {
-	train := &dto.Train{}
+	train := dto.Train{}
 	if err := db.DB.Table("trains").
-		Select("*").
 		Where("name = ?", name).
-		Scan(train).
+		Scan(&train).
 		Error; err != nil {
 		return nil, err
 	}
-	return train, nil
+	return &train, nil
 }

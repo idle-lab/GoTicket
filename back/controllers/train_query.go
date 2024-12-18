@@ -16,32 +16,34 @@ func OneWayTicketsQuery(ctx *gin.Context) {
 		logger.Warnf("query falied with error: %s", err)
 		ReturnError(ctx, &dto.JsonErrorStruct{
 			Code:    http.StatusBadRequest,
-			Message: fmt.Errorf("query failed with error: %s", err),
+			Message: fmt.Errorf("invalid request format"),
 		})
 		return
 	}
-
 	routes, err := services.TrainsQuery(req.Start_station, req.End_station)
 	if err != nil {
+		logger.Warnf("routres query failed with error: %s", err)
 		ReturnError(ctx, &dto.JsonErrorStruct{
 			Code:    http.StatusBadRequest,
-			Message: fmt.Errorf("routres query failed with error: %s", err),
+			Message: fmt.Errorf("routres query failed"),
 		})
 		return
 	}
 
 	rv, err := services.HandkeRoutes(routes, &req.User_preferences)
 	if err != nil {
+		logger.Warnf("routres query failed with error: %s", err)
 		ReturnError(ctx, &dto.JsonErrorStruct{
 			Code:    http.StatusBadRequest,
-			Message: fmt.Errorf("routres query failed with error: %s", err),
+			Message: fmt.Errorf("routres query failed"),
 		})
+		return
 	}
 
 	ReturnSuccess(ctx, &dto.JsonStruct{
 		Code:    http.StatusOK,
 		Message: "OK",
 		Data:    rv,
-		Count:   len(routes),
+		Count:   len(rv),
 	})
 }

@@ -22,36 +22,22 @@ func AddRoute(ctx *gin.Context) {
 		return
 	}
 	route := dto.Route{
+		Name:     req.Name,
 		Price_pk: req.Price_pk,
 	}
 	station_ids := make([]uint16, 0)
 	for i := 0; i < len(req.Stations); i++ {
-		id, err := models.Station{}.GetStations(req.Stations[i])
+		st, err := models.Station{}.GetStationByName(req.Stations[i])
 		if err != nil {
-			logger.Warnf("get station falied with err:%s", err)
+			logger.Warnf("get station falied with err: %s", err)
 			ReturnError(ctx, &dto.JsonErrorStruct{
 				Code:    http.StatusBadRequest,
-				Message: fmt.Errorf("get station falied with err:%s", err),
-			})
-			return
-		}
-		if len(id) == 0 {
-			logger.Infof("no such station:%s", req.Stations[i])
-			ReturnError(ctx, &dto.JsonErrorStruct{
-				Code:    http.StatusOK,
-				Message: fmt.Errorf("no such station:%s", req.Stations[i]),
-			})
-			return
-		} else if len(id) > 1 {
-			logger.Infof("need a station name not a city name:%s", req.Stations[i])
-			ReturnError(ctx, &dto.JsonErrorStruct{
-				Code:    http.StatusOK,
-				Message: fmt.Errorf("need a station name not a city name:%s", req.Stations[i]),
+				Message: fmt.Errorf("get station falied with err: %s", err),
 			})
 			return
 		}
 
-		station_ids = append(station_ids, id[0])
+		station_ids = append(station_ids, st.ID)
 	}
 	models.Route{}.AddRoute(&route)
 

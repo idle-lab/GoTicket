@@ -16,6 +16,7 @@ SELECT
     accessible_routes.price_pk as price_pk,
     train_numbers.available_seats as available_seats,
     train_numbers.dwell_time_per_stop as dwell_time_per_stop,
+    train_numbers.start_time as start_time,
     trains.avg_speed as avg_speed,
     trains.seats as seats,
     rank_s1.start_offset - 1 as start_station_offset,
@@ -105,7 +106,7 @@ func (Route) AddRouteStation(route_station *dto.RouteStation) error {
 
 func (Route) GetRoutesByStationId(start uint16, end uint16) ([]dto.AvailableRoute, error) {
 	routes := make([]dto.AvailableRoute, 0)
-	if err := db.DB.Exec(routeQuerySQL, start, end, start, end).Scan(&routes).Error; err != nil {
+	if err := db.DB.Raw(routeQuerySQL, start, end, start, end).Scan(&routes).Error; err != nil {
 		return nil, err
 	}
 	return routes, nil

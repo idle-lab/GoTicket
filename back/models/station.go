@@ -14,12 +14,17 @@ func (Station) AddStation(station *dto.Station) error {
 	return nil
 }
 
-func (Station) GetStations(postion string) ([]uint16, error) {
-	sts := make([]uint16, 0)
-	if err := db.DB.Table("stations").
-		Select("stations.id").
-		Where("stations.postion = ? OR stations.name = ?", postion, postion).
-		Scan(&sts).Error; err != nil {
+func (Station) GetStationByName(name string) (*dto.Station, error) {
+	var st dto.Station
+	if err := db.DB.Table("stations").Where("name = ?", name).Find(&st).Error; err != nil {
+		return nil, err
+	}
+	return &st, nil
+}
+
+func (Station) GetStationsByPosition(postion string) ([]dto.Station, error) {
+	var sts []dto.Station
+	if err := db.DB.Table("stations").Where("postion = ?", postion).Find(&sts).Error; err != nil {
 		return nil, err
 	}
 	return sts, nil
@@ -28,9 +33,8 @@ func (Station) GetStations(postion string) ([]uint16, error) {
 func (Station) GetStationsByIds(station_ids []uint16) ([]dto.Station, error) {
 	sts := make([]dto.Station, 0)
 	if err := db.DB.Table("stations").
-		Select("stations.id, stations.name, stations.postion").
-		Where("stations.id IN ?", station_ids).
-		Scan(&sts).Error; err != nil {
+		Where("stations.id IN (?)", station_ids).
+		Find(&sts).Error; err != nil {
 		return nil, err
 	}
 	return sts, nil

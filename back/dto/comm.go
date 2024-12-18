@@ -22,11 +22,16 @@ type AddRouteRequest struct {
 }
 
 type AddTrainRequest struct {
-	Name         string    `json:"name"`
-	Train_type   string    `json:"train_type"`
-	Max_capacity uint16    `json:"max_capacity"`
-	Seats        [][]uint8 `json:"seats"`
-	Avg_speed    float32   `json:"avg_speed"`
+	Name         string   `json:"name"`
+	Train_type   string   `json:"train_type"`
+	Max_capacity uint16   `json:"max_capacity"`
+	Seats        [][]uint `json:"seats"`
+	Avg_speed    float32  `json:"avg_speed"`
+}
+
+type AddStationRequest struct {
+	Name    string `json:"name"`
+	Postion string `json:"postion"`
 }
 
 type AddTrainNumberRequest struct {

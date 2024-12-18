@@ -166,19 +166,36 @@ func TestFetchUserInfo(t *testing.T) {
 
 /// 铁路相关
 
-type station struct {
+type Station struct {
 	Name    string `json:"name"`
-	Postion string `json:"position"`
+	Postion string `json:"postion"`
 }
 
-type route struct {
+type Route struct {
 	Name                string          `json:"name"`
 	Stations            []string        `json:"stations"`
 	Price_pk            decimal.Decimal `json:"price_pk"`
 	Distance_from_start []float64       `json:"distance_from_start"`
 }
 
-var stations = []station{
+type Train struct {
+	Name         string   `json:"name"`
+	Train_type   string   `json:"train_type"`
+	Max_capacity uint16   `json:"max_capacity"`
+	Seats        [][]uint `json:"seats"`
+	Avg_speed    float32  `json:"avg_speed"`
+}
+
+type TrainNumber struct {
+	Code                string   `json:"code"`
+	Status              string   `json:"status"`
+	Start_time          string   `json:"start_time"`
+	Dwell_time_per_stop []uint16 `json:"dwell_time_per_stop"`
+	Train_name          string   `json:"train_name"`
+	Route_name          string   `json:"route_name"`
+}
+
+var stations = []Station{
 	{
 		Name:    "Beijing Station",
 		Postion: "Beijing",
@@ -229,7 +246,7 @@ var stations = []station{
 	},
 }
 
-var routes = []route{
+var routes = []Route{
 	{
 		Name: "Beijing - Shanghai High-Speed Line",
 		Stations: []string{
@@ -269,6 +286,100 @@ var routes = []route{
 		},
 		Price_pk:            decimal.NewFromFloat(0.55),
 		Distance_from_start: []float64{0, 600},
+	},
+}
+
+var trains = []Train{
+	{
+		Name:         "Fuxing CR400AF", // 列车名
+		Train_type:   "G",              // 高铁
+		Max_capacity: 578,              // 最大载客量
+		Seats: [][]uint{ // 座位布局
+			{100, 100, 78, 100, 100, 100}, // 6 列座位，每列剩余座位总和为 578
+		},
+		Avg_speed: 350.0, // 平均速度，单位 km/h
+	},
+	{
+		Name:         "Hexie CRH380B", // 列车名
+		Train_type:   "D",             // 动车
+		Max_capacity: 610,             // 最大载客量
+		Seats: [][]uint{ // 座位布局
+			{110, 110, 100, 100, 90}, // 第一车厢，5 列座位
+			{50, 50},                 // 第二车厢，2 列座位
+		}, // 座位总和为 610
+		Avg_speed: 250.0, // 平均速度
+	},
+	{
+		Name:         "Green Train K598", // 列车名
+		Train_type:   "K",                // 普通火车
+		Max_capacity: 1180,               // 最大载客量
+		Seats: [][]uint{ // 座位布局
+			{150, 150, 150, 150, 150, 150}, // 1 号车厢，6 列座位
+			{100, 100, 80, 50},             // 2 号车厢，4 列座位
+		}, // 座位总和为 1180
+		Avg_speed: 120.0, // 平均速度
+	},
+	{
+		Name:         "Zhenghe D-series", // 列车名
+		Train_type:   "D",                // 动车
+		Max_capacity: 490,                // 最大载客量
+		Seats: [][]uint{ // 座位布局
+			{100, 100, 90, 100}, // 第一车厢，4 列座位
+			{50, 50},            // 第二车厢，2 列座位
+		}, // 座位总和为 490
+		Avg_speed: 200.0, // 平均速度
+	},
+	{
+		Name:         "Night Train T23", // 列车名
+		Train_type:   "K",               // 普通火车（卧铺）
+		Max_capacity: 800,               // 最大载客量
+		Seats: [][]uint{ // 座位布局
+			{200, 200, 200, 200}, // 第一车厢，4 列座位（卧铺）
+		}, // 座位总和为 800
+		Avg_speed: 90.0, // 平均速度
+	},
+}
+
+var train_numbers = []TrainNumber{
+	{
+		Code:                "123",
+		Status:              "Online",
+		Start_time:          "2024-12-18 08:00",
+		Dwell_time_per_stop: []uint16{5, 7, 10, 5},
+		Train_name:          "Fuxing CR400AF",
+		Route_name:          "Beijing - Shanghai High-Speed Line",
+	},
+	{
+		Code:                "456",
+		Status:              "Online",
+		Start_time:          "2024-12-18 12:30",
+		Dwell_time_per_stop: []uint16{3, 3, 5, 5},
+		Train_name:          "Hexie CRH380B",
+		Route_name:          "Guangzhou - Shenzhen Express Line",
+	},
+	{
+		Code:                "789",
+		Status:              "Offline",
+		Start_time:          "2024-12-19 06:15",
+		Dwell_time_per_stop: []uint16{15, 20},
+		Train_name:          "Green Train K598",
+		Route_name:          "Xi'an - Chengdu Line",
+	},
+	{
+		Code:                "888",
+		Status:              "Online",
+		Start_time:          "2024-12-18 09:50",
+		Dwell_time_per_stop: []uint16{8, 10},
+		Train_name:          "Zhenghe D-series",
+		Route_name:          "Wuhan - Hangzhou High-Speed Line",
+	},
+	{
+		Code:                "1234",
+		Status:              "Offline",
+		Start_time:          "2024-12-20 14:00",
+		Dwell_time_per_stop: []uint16{4, 5, 6, 4},
+		Train_name:          "Night Train T23",
+		Route_name:          "Guangzhou - Shenzhen Express Line",
 	},
 }
 
@@ -337,25 +448,19 @@ func TestAddTrain(t *testing.T) {
 
 	// 添加列车
 	url := baseURL + "/train"
-	train := map[string]interface{}{
-		"name":         "CRH380A",
-		"train_type":   "G",
-		"max_capacity": 500,
-		"seats":        [][]int{{5, 4}, {10, 5}},
-		"avg_speed":    300,
-	}
-
 	token := resp.Header.Get("Authorization")
-	resp = sendPOST(t, url, train, token)
+	for _, train := range trains {
+		resp = sendPOST(t, url, train, token)
 
-	if resp.StatusCode != http.StatusOK {
-		t.Fatalf("Expected status 200, got %d", resp.StatusCode)
-	}
+		if resp.StatusCode != http.StatusOK {
+			t.Fatalf("Expected status 200, got %d", resp.StatusCode)
+		}
 
-	var response Response
-	json.NewDecoder(resp.Body).Decode(&response)
-	if response.Code != 200 {
-		t.Errorf("Expected response code 200, got %d", response.Code)
+		var response Response
+		json.NewDecoder(resp.Body).Decode(&response)
+		if response.Code != 200 {
+			t.Errorf("Expected response code 200, got %d", response.Code)
+		}
 	}
 }
 
@@ -369,26 +474,20 @@ func TestAddTrainNumber(t *testing.T) {
 
 	// 添加车次
 	url := baseURL + "/trainNumber"
-	trainNumber := map[string]interface{}{
-		"code":                "G101",
-		"status":              "Online",
-		"start_time":          "2024-12-20 08:00",
-		"dwell_time_per_stop": []int{5, 6, 7},
-		"train_name":          "CRH380A",
-		"route_name":          "Route A",
-	}
 
 	token := resp.Header.Get("Authorization")
-	resp = sendPOST(t, url, trainNumber, token)
+	for _, train_number := range train_numbers {
+		resp = sendPOST(t, url, train_number, token)
 
-	if resp.StatusCode != http.StatusOK {
-		t.Fatalf("Expected status 200, got %d", resp.StatusCode)
-	}
+		if resp.StatusCode != http.StatusOK {
+			t.Fatalf("Expected status 200, got %d", resp.StatusCode)
+		}
 
-	var response Response
-	json.NewDecoder(resp.Body).Decode(&response)
-	if response.Code != 200 {
-		t.Errorf("Expected response code 200, got %d", response.Code)
+		var response Response
+		json.NewDecoder(resp.Body).Decode(&response)
+		if response.Code != 200 {
+			t.Errorf("Expected response code 200, got %d", response.Code)
+		}
 	}
 }
 
@@ -406,10 +505,10 @@ func TestOneWayTicketQuery(t *testing.T) {
 	endStation := "Shanghai"
 	// 假设你想设置时间范围
 	preferences := map[string]string{
-		"departure_time_after":  "2024-12-20 00:00",
-		"departure_time_before": "2024-12-25 23:59",
-		"arrival_time_after":    "2024-12-20 00:00",
-		"arrival_time_before":   "2024-12-25 23:59",
+		"departure_time_after":  "2024-12-17 08:00",
+		"departure_time_before": "2024-12-19 08:00",
+		"arrival_time_before":   "2024-12-19 08:00",
+		"arrival_time_after":    "2024-12-17 08:00",
 	}
 	requestBody := map[string]interface{}{
 		"start_station": startStation,
@@ -433,8 +532,4 @@ func TestOneWayTicketQuery(t *testing.T) {
 
 	// Ensure response contains data
 	assert.NotNil(t, response.Data)
-}
-
-func TestMain(m *testing.M) {
-	m.Run()
 }

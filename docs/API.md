@@ -259,7 +259,7 @@ Body：以 json 格式给出路线名字，路线经过的车站
     "train_type": string, // 列车的类型，取值为（'G','D','K'）
     "max_capacity": int, // 列车最大容量
     "seats": [[int...]...], // 座位布局
-    "avg_speed": float // 平均速度，单位 m/s
+    "avg_speed": float // 平均速度，单位 km/h
 }
 ```
 
@@ -333,6 +333,8 @@ Header:
 起点和终点要以json格式在请求体中给出，并且给出对车票的要求。
 
 目前可以指定出发时间和到达时间的范围，通过四个值 `departure_time_before``、departure_time_after`、`arrival_time_before`、`arrival_time_after`，列车的出发时间应该在 [departure_time_after, departure_time_before] 的范围内， 列车的到达时间应该在 [arrival_time_after, arrival_time_before] 的范围内。
+
+时间格式为 `YYYY-MM-DD HH-mm`，精确到分钟。
 
 ```json
 {
