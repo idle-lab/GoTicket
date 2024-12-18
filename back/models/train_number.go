@@ -1,25 +1,15 @@
 package models
 
-import "time"
+import (
+	"github.com/2418071565/GoTicket/dto"
+	"github.com/2418071565/GoTicket/storage/db"
+)
 
-/*
-TrainNumber 车次信息
+type TrainNumber struct{}
 
-- Status：车次状态
-
-- AvailableSeats：剩余的座位数
-
-- StartTime：列车开始时间
-
-- TrainID：外键，该车次的列车
-
-- RouteID：外键，改车次走的路线
-*/
-type TrainNumber struct {
-	ID              uint32    `gorm:"type:int unsigned;auto_increment"`
-	Status          string    `gorm:"enum('Online','Offline');not null"`
-	Available_seats uint16    `gorm:"type:smallint unsigned;not null"`
-	Start_time      time.Time `gorm:"not null"`
-	Train_ID        uint16    `gorm:"type:smallint unsigned;not null"`
-	Route_ID        uint16    `gorm:"type:smallint unsigned;not null"`
+func (TrainNumber) AddTrainNumber(train_number *dto.TrainNumber) error {
+	if err := db.DB.Table("train_numbers").Create(train_number).Error; err != nil {
+		return err
+	}
+	return nil
 }

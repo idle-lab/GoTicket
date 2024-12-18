@@ -9,41 +9,9 @@ import (
 	"github.com/2418071565/GoTicket/storage/db"
 )
 
-/*
-User 用户信息
+type User struct{}
 
-- Name：用户名字
-
-- Sex：性别
-
-- Password：密码
-
-- PhoneNumber：电话号
-
-- CreateDate：创建日期
-
-- IDNumber：身份证号
-
-- Orders：用户所有的订单
-
-- Tickers：用户所有的车票
-*/
-type User struct {
-	ID          uint32    `gorm:"primaryKey;type:int unsigned"`
-	Name        string    `gorm:"type:char(20);index:name_index;not null"`
-	Sex         string    `gorm:"type:enum('Male','Female');not null"`
-	Password    string    `gorm:"type:varchar(20);not null"`
-	Phone       string    `gorm:"type:char(15);not null"`
-	Create_date time.Time `gorm:"type:datetime;not null"`
-	Id_number   string    `gorm:"type:char(18);not null"`
-	Orders      []Order   `gorm:"foreignKey:user_id"`
-	Tickers     []Ticket  `gorm:"foreignKey:user_id"`
-	Admin       Admin     `gorm:"foreignKey:ID"`
-}
-
-type Admin struct {
-	ID uint32 `gorm:"type:int unsigned"`
-}
+type Admin struct{}
 
 func init() {
 	var cnt int64
@@ -51,22 +19,22 @@ func init() {
 		logger.Errorf("init admin `goticket` failed with err: %s", err)
 	}
 	if cnt == 0 {
-		default_admin := &User{
+		default_admin := &dto.User{
 			Name:        "goticket",
 			Sex:         "Male",
 			Password:    config.DEFAULT_ADMIN_PASSWORD,
 			Phone:       config.DEFAULT_ADMIN,
 			Create_date: time.Now(),
 			Id_number:   "",
+			Role:        "admin",
 		}
-		db.DB.Create(default_admin)
-		db.DB.Create(&Admin{ID: default_admin.ID})
+		db.DB.Table("users").Create(default_admin)
 	}
 }
 
 // 通过手机号判断用户是否存在
-func IsUserExists(phone string) (bool, error) {
-	var cnt int64
+func (User) IsUserExists(phone string) (bool, error) {
+	var cnt int64 = 0
 	if err := db.DB.Table("users").Select("id").Where("phone = ?", phone).Count(&cnt).Error; err != nil {
 		return false, err
 	}
@@ -76,46 +44,36 @@ func IsUserExists(phone string) (bool, error) {
 	return true, nil
 }
 
-func GetUserByPhone(phone string) (*dto.User, error) {
+func (User) GetUserByPhone(phone string) (*dto.User, error) {
 	user := &dto.User{}
 	if err := db.DB.Table("users").
-		Select("users.id, users.name, users.sex, users.password, users.phone, users.create_date, users.id_number, admins.id IS NOT NULL AS is_admin").
-		Joins("LEFT JOIN admins ON users.id = admins.id").
-		Where("users.phone = ?", phone).
+		Where("phone = ?", phone).
 		Scan(user).Error; err != nil {
 		return nil, err
 	}
 	return user, nil
 }
 
-func GetUserById(id uint32) (*dto.User, error) {
+func (User) GetUserById(id uint32) (*dto.User, error) {
 	user := &dto.User{}
 	if err := db.DB.Table("users").
-		Select("users.id, users.name, users.sex, users.password, users.phone, users.create_date, users.id_number, admins.id IS NOT NULL AS is_admin").
-		Joins("LEFT JOIN admins ON users.id = admins.id").
-		Where("users.id = ?", id).
+		Where("id = ?", id).
 		Scan(&user).Error; err != nil {
 		return nil, err
 	}
 	return user, nil
 }
 
-func AddUser(user *dto.User) (uint32, error) {
-	new_user := User{
-		ID:          user.ID,
-		Name:        user.Name,
-		Sex:         user.Sex,
-		Password:    user.Password,
-		Phone:       user.Phone,
-		Create_date: user.Create_date,
-		Id_number:   user.Id_number,
-	}
-	err := db.DB.Create(&new_user).Error
-	return new_user.ID, err
+func (User) AddUser(user *dto.User) error {
+	user.Role = "user"
+	return db.DB.Create(&user).Error
 }
 
-func AddAdmin(user *dto.User) error {
-	admin := &Admin{ID: user.ID}
-	err := db.DB.Create(admin).Error
-	return err
+func (Admin) AddAdmin(admin *dto.User) error {
+	admin.Role = "Admin"
+	return db.DB.Table("users").Create(admin).Error
+}
+
+func (Admin) ChangeToAdmin(user *dto.User) error {
+	return db.DB.Table("user").Where("id = ?", user.ID).Update("role", "admin").Error
 }

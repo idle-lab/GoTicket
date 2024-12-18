@@ -1,23 +1,26 @@
 package models
 
-/*
-Train 列车信息
+import (
+	"github.com/2418071565/GoTicket/dto"
+	"github.com/2418071565/GoTicket/storage/db"
+)
 
-- TrainType：列车类型（高铁、动车和绿皮）
+type Train struct{}
 
-- MaxCapacity：列车最大载客量
+func (Train) AddTrain(train *dto.Train) error {
+	if err := db.DB.Table("trains").Create(train).Error; err != nil {
+		return err
+	}
+	return nil
+}
 
-- Seats：列车座位表，[车厢][行][列]
-
-- AvgSpeed：列车平均速度，用于预测到站时间
-
-- TrainNumbers：该列车所有的车次
-*/
-type Train struct {
-	ID            uint16        `gorm:"type:smallint unsigned;auto_increment"`
-	Train_type    string        `gorm:"type:enum('G','D','K');not null"`
-	Max_capacity  uint16        `gorm:"type:smallint unsigned;not null"`
-	Seats         string        `gorm:"type:json;not null"`
-	Avg_speed     float32       `gorm:"not null"`
-	Train_numbers []TrainNumber `gorm:"foreignKey:TrainID"`
+func (Train) GetTrainByName(name string) (*dto.Train, error) {
+	train := dto.Train{}
+	if err := db.DB.Table("trains").
+		Where("name = ?", name).
+		Scan(&train).
+		Error; err != nil {
+		return nil, err
+	}
+	return &train, nil
 }
