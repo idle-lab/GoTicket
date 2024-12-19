@@ -9,6 +9,8 @@ import SeatPreference from './SeatsPreference'
 export default function Booking() {
   const [ticketCount, setTicketCount] = useState(0)
   const [passengerInfo, setPassengerInfo] = useState([]) // 存储乘客信息
+  const [contactData, setContactData] = useState({}) // 存储联系人信息
+  const [selectedSeats, setSelectedSeats] = useState([]) // 存储已选座位
 
   // 更新票数
   const updateTicketCount = (newCount) => {
@@ -20,9 +22,20 @@ export default function Booking() {
     setPassengerInfo(newPassengerInfo)
   }
 
+  const updateContactData = (newContactData) => {
+    setContactData(newContactData)
+  }
+
+  const updateSelectedSeats = (seats) => {
+    setSelectedSeats(seats)
+  }
+
   const handleBooking = () => {
     // 提交数据给后端
     console.log('Passenger Info:', passengerInfo)
+    console.log('Contact Data:', contactData)
+    console.log('Selected Seats:', selectedSeats)
+
     // 在此处进行 API 调用，提交数据到后端
   }
 
@@ -36,8 +49,8 @@ export default function Booking() {
               updateTicketCount={updateTicketCount}
               updatePassengerInfo={updatePassengerInfo}
             />
-            <ContactInfo />
-            <SeatPreference />
+            <ContactInfo updateContactData={updateContactData} />
+            <SeatPreference ticketCount={ticketCount} updateSelectedSeats={updateSelectedSeats} />
             <Button type="primary" block onClick={handleBooking}>
               BOOK
             </Button>

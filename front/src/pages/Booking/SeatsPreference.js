@@ -6,17 +6,27 @@ const seatLayout = [
   ['Window', 'A', 'B', 'C', 'Aisle', 'D', 'F', 'Window'],
 ]
 
-export default function SeatPreference() {
-  const [selectedSeats, setSelectedSeats] = useState({})
+export default function SeatPreference({ ticketCount, updateSelectedSeats }) {
+  const [selectedSeats, setSelectedSeats] = useState([])
 
   const toggleSeatSelection = (rowIndex, seatIndex) => {
-    const seat = seatLayout[rowIndex][seatIndex]
-    if (seat === 'Window' || seat === 'Aisle') return
     const seatKey = `${rowIndex}-${seatIndex}`
-    setSelectedSeats((prevSelectedSeats) => ({
-      ...prevSelectedSeats,
-      [seatKey]: !prevSelectedSeats[seatKey],
-    }))
+    const seat = seatLayout[rowIndex][seatIndex]
+
+    if (seat === 'Window' || seat === 'Aisle') return
+
+    if (selectedSeats.includes(seatKey)) {
+      const updatedSeats = selectedSeats.filter((key) => key !== seatKey)
+      setSelectedSeats(updatedSeats)
+      updateSelectedSeats(updatedSeats)
+      return
+    }
+
+    if (selectedSeats.length < ticketCount) {
+      const updatedSeats = [...selectedSeats, seatKey]
+      setSelectedSeats(updatedSeats)
+      updateSelectedSeats(updatedSeats)
+    }
   }
 
   return (
@@ -26,8 +36,8 @@ export default function SeatPreference() {
           <Row key={rowIndex} gutter={[16, 16]} className="seat-row" justify="center">
             {row.map((seat, seatIndex) => {
               const seatKey = `${rowIndex}-${seatIndex}`
-              const isSelected = selectedSeats[seatKey]
-              const isUnselectable = seat === 'Window' || seat === 'Aisle' // 判断座位是否不可选择
+              const isSelected = selectedSeats.includes(seatKey)
+              const isUnselectable = seat === 'Window' || seat === 'Aisle'
 
               return (
                 <Col
@@ -36,7 +46,9 @@ export default function SeatPreference() {
                   className={`seat-col ${isSelected ? 'selected' : ''} ${
                     isUnselectable ? 'unselectable' : ''
                   }`}
-                  onClick={() => toggleSeatSelection(rowIndex, seatIndex)}
+                  onClick={
+                    !isUnselectable ? () => toggleSeatSelection(rowIndex, seatIndex) : undefined
+                  }
                   style={{
                     textAlign: 'center',
                     cursor: isUnselectable ? 'not-allowed' : 'pointer',
