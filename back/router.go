@@ -12,6 +12,7 @@ func CollectRoute(ser *gin.Engine) *gin.Engine {
 		auth_user_group := auth_group.Group("")
 		{
 			auth_user_group.GET("/userInfo", controllers.GetUserInfo)
+			auth_user_group.PUT("/userInfo", controllers.ChangeUserInfo)
 			auth_user_group.GET("/station", controllers.GetAllStations)
 			auth_user_group.GET("/route", controllers.GetAllRoutes)
 			auth_user_group.GET("/train", controllers.GetAllTrains)
@@ -24,7 +25,6 @@ func CollectRoute(ser *gin.Engine) *gin.Engine {
 			auth_user_group.POST("/train", controllers.AddTrain)
 			auth_user_group.POST("/station", controllers.AddStation)
 			auth_user_group.POST("/trainNumber", controllers.AddTrainNumber)
-
 		}
 	}
 

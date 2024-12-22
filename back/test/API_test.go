@@ -62,6 +62,27 @@ func sendGET(t *testing.T, url string, token string) *http.Response {
 	return resp
 }
 
+// Helper function to send PUT requests
+func sendPUT(t *testing.T, url string, body interface{}, token string) *http.Response {
+	jsonBody, err := json.Marshal(body)
+	if err != nil {
+		t.Fatalf("Failed to marshal request body: %v", err)
+	}
+	req, err := http.NewRequest("PUT", url, bytes.NewBuffer(jsonBody))
+	if err != nil {
+		t.Fatalf("Failed to create request: %v", err)
+	}
+	req.Header.Set("Content-Type", "application/json")
+	if token != "" {
+		req.Header.Set("Authorization", token)
+	}
+	resp, err := http.DefaultClient.Do(req)
+	if err != nil {
+		t.Fatalf("Request failed: %v", err)
+	}
+	return resp
+}
+
 var user = map[string]string{
 	"name":      "John Doe",
 	"sex":       "Male",
@@ -158,6 +179,51 @@ func TestFetchUserInfo(t *testing.T) {
 		t.Fatalf("Expected status 200, got %d", resp.StatusCode)
 	}
 	var response Response
+	json.NewDecoder(resp.Body).Decode(&response)
+	if response.Code != 200 {
+		t.Errorf("Expected response code 200, got %d", response.Code)
+	}
+}
+
+func TestUpdateUserInfo(t *testing.T) {
+	resp := Login(t, admin["phone"], admin["password"])
+	if resp == nil {
+		return
+	}
+	url := baseURL + "/userInfo"
+	token := resp.Header.Get("Authorization")
+	var response Response
+
+	resp = sendGET(t, url, token)
+	if resp.StatusCode != http.StatusOK {
+		t.Fatalf("Expected status 200, got %d", resp.StatusCode)
+	}
+	json.NewDecoder(resp.Body).Decode(&response)
+	if response.Code != 200 {
+		t.Errorf("Expected response code 200, got %d", response.Code)
+	}
+	data := response.Data.(map[string]interface{})
+
+	resp = sendPUT(t, url, map[string]interface{}{
+		"id":        int64(data["id"].(float64)),
+		"name":      "timeplus",
+		"sex":       "Male",
+		"password":  "123456",
+		"phone":     "12345678901",
+		"id_number": "123456789012345678",
+	}, token)
+	if resp.StatusCode != http.StatusOK {
+		t.Fatalf("Expected status 200, got %d", resp.StatusCode)
+	}
+	json.NewDecoder(resp.Body).Decode(&response)
+	if response.Code != 200 {
+		t.Errorf("Expected response code 200, got %d", response.Code)
+	}
+
+	resp = sendGET(t, url, token)
+	if resp.StatusCode != http.StatusOK {
+		t.Fatalf("Expected status 200, got %d", resp.StatusCode)
+	}
 	json.NewDecoder(resp.Body).Decode(&response)
 	if response.Code != 200 {
 		t.Errorf("Expected response code 200, got %d", response.Code)
@@ -606,10 +672,11 @@ func TestOneWayTicketQuery(t *testing.T) {
 	endStation := "Shanghai"
 	// 假设你想设置时间范围
 	preferences := map[string]string{
-		"departure_time_after":  "2024-12-17 08:00",
-		"departure_time_before": "2024-12-19 08:00",
-		"arrival_time_before":   "2024-12-19 08:00",
-		"arrival_time_after":    "2024-12-17 08:00",
+		"departure_time_after": "2024-12-18 00:00",
+
+		"departure_time_before": "2024-12-18 23:59",
+		"arrival_time_after":    "2024-12-18 00:00",
+		"arrival_time_before":   "2024-12-18 23:59",
 	}
 	requestBody := map[string]interface{}{
 		"start_station": startStation,
