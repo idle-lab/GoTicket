@@ -55,7 +55,19 @@ func GetAllStations(ctx *gin.Context) {
 }
 
 func UpdateStations(ctx *gin.Context) {
+	// new_station := dto.Station{}
+	// if err := ctx.ShouldBind(&new_station); err != nil {
+	// 	logger.Infof("update station failed with err:%s", err)
+	// 	ReturnError(ctx, &dto.JsonErrorStruct{
+	// 		Code:    http.StatusInternalServerError,
+	// 		Message: fmt.Sprintf("update station failed with err: %s", err),
+	// 	})
+	// 	return
+	// }
 
+	// if err := models.Station{}.UpdateStation(&new_station);err != nil {
+
+	// }
 }
 
 func DeleteStation(ctx *gin.Context) {

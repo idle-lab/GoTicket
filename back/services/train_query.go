@@ -103,13 +103,17 @@ func HandkeRoutes(routes []dto.AvailableRoute, pref *dto.Preferences) ([]dto.One
 		}
 
 		start_offset, end_offset := routes[i].Start_station_offset, routes[i].End_station_offset
+		pref_departure_time_after := time.Time(pref.Departure_time_after)
+		pref_departure_time_before := time.Time(pref.Departure_time_before)
+		pref_arrival_time_after := time.Time(pref.Arrival_time_after)
+		pref_arrival_time_before := time.Time(pref.Arrival_time_before)
 
 		departure_start_time := routes[i].Station_expected_departure_times[start_offset]
 		arrival_end_time := routes[i].Station_expected_departure_times[end_offset].Add(-dwell_times[end_offset])
 		// 要保证`开始站`的发车时间要在 [Departure_time_after, Departure_time_before] 范围内 并且
 		//   保证`结束站`的到达时间要在 [Arrival_time_after, Arrival_time_before] 范围内
-		if departure_start_time.After(time.Time(pref.Departure_time_after)) && departure_start_time.Before(time.Time(pref.Departure_time_before)) &&
-			arrival_end_time.After(time.Time(pref.Arrival_time_after)) && arrival_end_time.Before(time.Time(pref.Arrival_time_before)) {
+		if departure_start_time.After(pref_departure_time_after) && departure_start_time.Before(pref_departure_time_before) &&
+			arrival_end_time.After(pref_arrival_time_after) && arrival_end_time.Before(pref_arrival_time_before) {
 			// 将车站 id 转化为车站名
 			station_ids_str := routes[i].Station_ids
 			station_ids := strings.Split(station_ids_str, ",")

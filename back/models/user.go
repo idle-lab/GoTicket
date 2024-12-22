@@ -69,11 +69,15 @@ func (User) AddUser(user *dto.User) error {
 	return db.DB.Create(&user).Error
 }
 
+func (User) GhangeUserInfo(user *dto.User) error {
+	return db.DB.Table("users").Where("id = ?", user.ID).Update(user).Error
+}
+
 func (Admin) AddAdmin(admin *dto.User) error {
 	admin.Role = "Admin"
 	return db.DB.Table("users").Create(admin).Error
 }
 
 func (Admin) ChangeToAdmin(user *dto.User) error {
-	return db.DB.Table("user").Where("id = ?", user.ID).Update("role", "admin").Error
+	return db.DB.Table("users").Where("id = ?", user.ID).Update("role", "admin").Error
 }

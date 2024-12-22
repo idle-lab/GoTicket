@@ -56,6 +56,9 @@ Body:
 }
 ```
 
+
+
+
 ### 注册管理员
 
 该请求会创建一个新管理员，并返一个 token（有效期为 10 min）。系统会默认自带一个管理员，可以通过配置文件设置。其他管理员只能通过已存在的管理员添加。
@@ -161,6 +164,52 @@ Body:
 }
 ```
 
+### 修改用户信息
+
+该请求会修改用户的信息，需要给服务器传递要修改用户的id，以及修改后的用户的信息。
+
+**请求：**
+
+URL：`/user`
+
+Method：`PUT`
+
+需要登录时获得的 token
+
+`Authorization`: token
+
+Body：
+
+```json
+{
+    "id": int, // 要求改用户的 id
+    "name": string,  // 姓名
+    "sex": string,  // 'Male', 'Female'
+    "password": string, // 密码
+    "phone": string,  // 手机号
+    "id_number": string,  // 身份证号
+}
+```
+
+
+**服务器响应：**
+
+Header:
+
+`Authorization`: token
+
+返回 token ，有效期为 10 分钟。
+
+Body:
+
+```json
+{
+    "code": 200,  // http 状态码
+    "msg": "OK",  // 状态信息
+    "count": 0  // 返回的数据条数
+}
+```
+
 ## Train
 
 一下这些 API 和 车票查询相关。
@@ -171,7 +220,7 @@ Body:
 
 **请求：**
 
-URL: `/station`
+URL: `/admin/station`
 
 Method：`POST`
 
@@ -202,7 +251,9 @@ Body：以 json 格式给出路线名字，路线经过的车站
 
 **请求：**
 
-URL: `/stations`
+
+URL: `/station`
+
 
 Method：`GET`
 
@@ -235,7 +286,7 @@ Header:需要登录时获得的 token
 
 **请求：**
 
-URL: `/route`
+URL: `/admin/route`
 
 Method：`POST`
 
@@ -276,6 +327,35 @@ Header:需要登录时获得的 token
 `Authorization`: token
 
 
+URL: `/route`
+
+Method：`GET`
+
+Header:需要登录时获得的 token
+
+`Authorization`: token
+
+
+**服务器响应：**
+
+```json
+{
+    "code": 200,  // http 状态码
+    "msg": "OK",  // 状态信息
+    "data": [
+        {
+            "id": int,// 这条路线的id
+            "name": string ,// 这条路线的名字
+            "price_pk": float, // 单位：元/km
+            "stations": [string...], // 经过的所有车站名,
+            "distance_from_start": [float...] // 每站到起点站的距离。
+        },
+        ...
+    ],
+    "count": 0  // 返回的数据条数
+}
+```
+
 **服务器响应：**
 
 ```json
@@ -307,7 +387,7 @@ Header:需要登录时获得的 token
 
 **请求：**
 
-URL: `/train`
+URL: `/admin/train`
 
 Method：`POST`
 
@@ -380,7 +460,7 @@ Header:需要登录时获得的 token
 
 **请求：**
 
-URL: `/trainNumber`
+URL: `/admin/trainNumber`
 
 Method：`POST`
 

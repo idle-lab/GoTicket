@@ -204,6 +204,31 @@ func AdminRegister(ctx *gin.Context) {
 	})
 }
 
-func ChangeInfo(ctx *gin.Context) {
 
+func ChangeUserInfo(ctx *gin.Context) {
+	user, err := services.GetUserInfoFromRequest(ctx)
+	if err != nil {
+		logger.Infof("invalid user info: %s\n", err)
+		ReturnError(ctx, &dto.JsonErrorStruct{
+			Code:    http.StatusBadRequest,
+			Message: err.Error(),
+		})
+		return
+	}
+
+	err = models.User{}.GhangeUserInfo(user)
+	if err != nil {
+		logger.Infof("update user info failed with err: %s\n", err)
+		ReturnError(ctx, &dto.JsonErrorStruct{
+			Code:    http.StatusBadRequest,
+			Message: err.Error(),
+		})
+		return
+	}
+
+	ReturnSuccess(ctx, &dto.JsonStruct{
+		Code:    http.StatusOK,
+		Message: "OK",
+		Count:   0,
+	})
 }
