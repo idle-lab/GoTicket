@@ -14,10 +14,10 @@ Train 列车信息
 - TrainNumbers：该列车所有的车次
 */
 type Train struct {
-	ID           uint16
-	Name         string
-	Train_type   string
-	Max_capacity uint16
-	Seats        string
-	Avg_speed    float32
+	ID           uint16  `json:"id"`
+	Name         string  `json:"name"`
+	Train_type   string  `json:"train_type"`
+	Max_capacity uint16  `json:"max_capacity"`
+	Seats        string  `json:"seats"`
+	Avg_speed    float32 `json:"avg_speed"`
 }

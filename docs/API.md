@@ -24,13 +24,15 @@ Method：`POST`
 
 Body：
 
-|字段名|类型|要求|
-|:-:|:-:|:-:|
-|name|string|不超过 20 byte|
-|sex|string|enum('Male', 'Female')|
-|password|string||
-|phone|string|合法手机号|
-|id_number|string|合法身份证号|
+```json
+{
+    "name": string,  // 姓名
+    "sex": string,  // 'Male', 'Female'
+    "password": string, // 密码
+    "phone": string,  // 手机号
+    "id_number": string,  // 身份证号
+}
+```
 
 
 **服务器响应：**
@@ -161,7 +163,7 @@ Body:
 
 ## Train
 
-一下这些 API 和 车票查询相关
+一下这些 API 和 车票查询相关。
 
 ### 添加车站
 
@@ -192,6 +194,37 @@ Body：以 json 格式给出路线名字，路线经过的车站
 {
     "code": 200,  // http 状态码
     "msg": "OK",  // 状态信息
+    "count": 0  // 返回的数据条数
+}
+```
+
+### 查询所有车站
+
+**请求：**
+
+URL: `/stations`
+
+Method：`GET`
+
+Header:需要登录时获得的 token
+
+`Authorization`: token
+
+
+**服务器响应：**
+
+```json
+{
+    "code": 200,  // http 状态码
+    "msg": "OK",  // 状态信息
+    "data": [
+        {
+            "id": int,  // 车站 id
+            "name": string,  // 车站名
+            "postion": string,  // 车站所在城市
+        },
+        ...
+    ],
     "count": 0  // 返回的数据条数
 }
 ```
@@ -230,7 +263,38 @@ Body：以 json 格式给出路线名字，路线经过的车站
     "count": 0  // 返回的数据条数
 }
 ```
+### 查询所有路线
 
+**请求：**
+
+URL: `/route`
+
+Method：`GET`
+
+Header:需要登录时获得的 token
+
+`Authorization`: token
+
+
+**服务器响应：**
+
+```json
+{
+    "code": 200,  // http 状态码
+    "msg": "OK",  // 状态信息
+    "data": [
+        {
+            "id": int,// 这条路线的id
+            "name": string ,// 这条路线的名字
+            "price_pk": float, // 单位：元/km
+            "stations": [string...], // 经过的所有车站名,
+            "distance_from_start": [float...] // 每站到起点站的距离。
+        },
+        ...
+    ],
+    "count": 0  // 返回的数据条数
+}
+```
 
 
 ### 添加列车
@@ -275,6 +339,41 @@ Body：以 json 格式给出路线名字，路线经过的车站
 }
 ```
 
+### 查询所有列车
+
+**请求：**
+
+URL: `/train`
+
+Method：`GET`
+
+Header:需要登录时获得的 token
+
+`Authorization`: token
+
+
+**服务器响应：**
+
+```json
+{
+    "code": 200,  // http 状态码
+    "msg": "OK",  // 状态信息
+    "data": [
+        {
+            "id": int,  // 车站 id
+            "name": string,  // 列车名
+            "train_type": string,  // 列车类型
+            "max_capacity": string,  // 列车最大容量
+            "seats": string,  // 列车座位数组，这里是序列化为字符串的格式
+            "avg_speed": float,  // 平均速度
+        },
+        ...
+    ],
+    "count": 0  // 返回的数据条数
+}
+```
+
+
 ### 添加车次
 
 这个 API 需要管理员权限，你需要提供车次的车次号，状态，车次执行时间，该车次每站的停留时间，车次开始时间，执行该车次的列车名，该车次执行的路线名。
@@ -314,6 +413,41 @@ Body：以 json 格式给出路线名字，路线经过的车站
 }
 ```
 
+### 查询所有车次
+
+**请求：**
+
+URL: `/trainNumber`
+
+Method：`GET`
+
+Header:需要登录时获得的 token
+
+`Authorization`: token
+
+
+**服务器响应：**
+
+```json
+{
+    "code": 200,  // http 状态码
+    "msg": "OK",  // 状态信息
+    "data": [
+        {
+            "id": int, // 车次id
+            "code": string, // 车次号
+            "status": string, // 车次状态，enum('Online','Offline')
+            "start_time": string, // 车次开始时间，格式：YYYY-MM-DD HH:mm
+            "dwell_time_per_stop": [[int...]...], // 每站停留时间，单位 min
+            "train_name": string, // 执行该车次的列车名
+            "route_name": string, // 该车次执行的路线名
+        },
+        ...
+    ],
+    "count": 0  // 返回的数据条数
+}
+```
+
 ### 单程车票查询
 
 你为服务器提供起点和终点（可以是城市名，或是车站名），服务器返回给你所有能到达目的地的车次信息。
@@ -322,7 +456,7 @@ Body：以 json 格式给出路线名字，路线经过的车站
 
 URL：`/oneWayTickets`
 
-Method：`GET`
+Method：`POST`
 
 Header:
 

@@ -16,7 +16,7 @@ func OneWayTicketsQuery(ctx *gin.Context) {
 		logger.Warnf("query falied with error: %s", err)
 		ReturnError(ctx, &dto.JsonErrorStruct{
 			Code:    http.StatusBadRequest,
-			Message: fmt.Errorf("invalid request format"),
+			Message: fmt.Errorf("invalid request format").Error(),
 		})
 		return
 	}
@@ -25,7 +25,7 @@ func OneWayTicketsQuery(ctx *gin.Context) {
 		logger.Warnf("routres query failed with error: %s", err)
 		ReturnError(ctx, &dto.JsonErrorStruct{
 			Code:    http.StatusBadRequest,
-			Message: fmt.Errorf("routres query failed"),
+			Message: fmt.Errorf("routres query failed").Error(),
 		})
 		return
 	}
@@ -35,7 +35,7 @@ func OneWayTicketsQuery(ctx *gin.Context) {
 		logger.Warnf("routres query failed with error: %s", err)
 		ReturnError(ctx, &dto.JsonErrorStruct{
 			Code:    http.StatusBadRequest,
-			Message: fmt.Errorf("routres query failed"),
+			Message: fmt.Errorf("routres query failed").Error(),
 		})
 		return
 	}

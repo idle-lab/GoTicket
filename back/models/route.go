@@ -122,3 +122,32 @@ func (Route) GetRoute(cols string, where string, args ...interface{}) (*dto.Rout
 	}
 	return route, nil
 }
+
+func (Route) GetRouteById(id uint16) (*dto.Route, error) {
+	route := dto.Route{}
+	if err := db.DB.Table("routes").
+		Where("id = ?", id).
+		Scan(&route).Error; err != nil {
+		return nil, err
+	}
+	return &route, nil
+}
+
+func (Route) GetRoutes() ([]dto.Route, error) {
+	routes := []dto.Route{}
+	if err := db.DB.Table("routes").Scan(&routes).Error; err != nil {
+		return nil, err
+	}
+	return routes, nil
+}
+
+func (Route) GetRouteStationsByRouteId(id uint16) ([]dto.RouteStation, error) {
+	rs := []dto.RouteStation{}
+	if err := db.DB.Table("route_station").
+		Where("route_id = ?", id).
+		Order("distance_from_start ASC").
+		Scan(&rs).Error; err != nil {
+		return nil, err
+	}
+	return rs, nil
+}

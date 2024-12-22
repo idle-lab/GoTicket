@@ -56,6 +56,24 @@ type RouteStation struct {
 	Distance_from_start float64 `json:"distance_from_start"`
 }
 
+type RouteResponse struct {
+	ID                  uint16          `json:"id"`
+	Name                string          `json:"name"`
+	Price_pk            decimal.Decimal `json:"price_pk"`
+	Stations            []string        `json:"stations"`
+	Distance_from_start []float64       `json:"distance_from_start"`
+}
+
+type TrainNumberResponse struct {
+	ID                  uint32   `json:"id"`
+	Code                string   `json:"code"`
+	Status              string   `json:"status"`
+	Start_time          string   `json:"start_time"`
+	Dwell_time_per_stop []uint16 `json:"dwell_time_per_stop"`
+	Train_name          string   `json:"train_name"`
+	Route_name          string   `json:"route_name"`
+}
+
 type AvailableRoute struct {
 	Route_id                         uint16      `json:"route_id"`
 	Code                             string      `json:"code"`
@@ -75,9 +93,9 @@ type AvailableRoute struct {
 	Station_distances string `json:"station_distances"`
 }
 
-type RouteResponse struct {
+type OneWayRouteResponse struct {
 	Code                             string          `json:"code"`
-	Stations                         []string        `json:"station_ids"`
+	Stations                         []string        `json:"stations"`
 	Dwell_time_per_stop              []time.Duration `json:"dwell_time_per_stop"`
 	Station_expected_departure_times []time.Time     `json:"station_expected_departure_times"`
 	Start_station_offset             uint16          `json:"start_station_offset"`
@@ -127,16 +145,4 @@ func NewPreferences() *Preferences {
 	pre.Arrival_time_after = TicketTime(time.Now())
 	pre.Arrival_time_before = TicketTime(time.Now().Add(22 * Day))
 	return pre
-}
-
-type TrainNumberInfo struct {
-	Route_id        uint16   `json:"route_id"`
-	Train_number    string   `json:"train_number"`
-	Start_station   string   `json:"start_station"`
-	End_station     string   `json:"end_station"`
-	Departure_time  string   `json:"departure_time"`
-	Arrival_time    string   `json:"arrival_time"`
-	Available_seats uint16   `json:"available_seats"`
-	Price           float32  `json:"price"`
-	All_station     []string `json:"all_station"`
 }
