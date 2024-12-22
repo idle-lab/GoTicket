@@ -1,15 +1,23 @@
-import React, { useState } from 'react'
-import { Layout, Menu } from 'antd'
+import React, { useState, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
+import { useUser } from '../../contexts/UserContext'
+import { Layout, Menu, message } from 'antd'
 import UserManagement from './UserManagement'
-import RoleManagement from './RoleManagement'
 import TicketManagement from './TicketManagement'
 import OrderManagement from './OrderManagement'
+import StationManagement from './StationManagement'
+import RouteManagement from './RouteManagement'
+import TrainManagement from './TrainManagement'
+import TrainNumberManagement from './TrainNumberManagement'
 
 import {
   UserOutlined,
   LockOutlined,
   ScheduleOutlined,
   OrderedListOutlined,
+  FileTextOutlined,
+  RocketOutlined,
+  CarOutlined,
 } from '@ant-design/icons'
 import './index.css'
 
@@ -22,14 +30,24 @@ const MENU_ITEMS = [
     label: '用户管理',
   },
   {
-    key: 'roles',
-    icon: <LockOutlined />,
-    label: '权限管理',
+    key: 'stations',
+    icon: <FileTextOutlined />,
+    label: '车站管理',
   },
   {
-    key: 'tickets',
+    key: 'routes',
+    icon: <RocketOutlined />,
+    label: '路线管理',
+  },
+  {
+    key: 'trains',
+    icon: <CarOutlined />,
+    label: '列车管理',
+  },
+  {
+    key: 'trainNumbers',
     icon: <ScheduleOutlined />,
-    label: '车票管理',
+    label: '车次管理',
   },
   {
     key: 'orders',
@@ -39,7 +57,18 @@ const MENU_ITEMS = [
 ]
 
 const Admin = () => {
+  const navigate = useNavigate()
+  const { userInfo } = useUser() // 获取当前的用户信息
+
   const [selectedKey, setSelectedKey] = useState('users')
+
+  useEffect(() => {
+    if (userInfo?.role !== 'admin') {
+      //返回提示给用户
+      message.error('You are not authorized to access this page')
+      navigate('/')
+    }
+  }, [userInfo, navigate])
 
   const handleMenuClick = ({ key }) => {
     setSelectedKey(key)
@@ -49,12 +78,16 @@ const Admin = () => {
     switch (selectedKey) {
       case 'users':
         return <UserManagement />
-      case 'roles':
-        return <RoleManagement />
-      case 'tickets':
-        return <TicketManagement />
+      case 'trainNumbers':
+        return <TrainNumberManagement />
       case 'orders':
         return <OrderManagement />
+      case 'stations':
+        return <StationManagement />
+      case 'routes':
+        return <RouteManagement />
+      case 'trains':
+        return <TrainManagement />
       default:
         return null
     }

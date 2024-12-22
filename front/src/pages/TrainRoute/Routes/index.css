@@ -5,7 +5,7 @@
 .departure-col::after {
   content: '';
   position: absolute;
-  top: 55%;
+  top: 40%;
   right: 10px; /* 箭头整体的位置，调整右偏移 */
   transform: translateY(-50%);
   display: block;
@@ -17,7 +17,7 @@
 .departure-col::before {
   content: '';
   position: absolute;
-  top: 52%;
+  top: 38%;
   right: 3px; /* 调整箭头尖端的位置 */
   transform: translateY(-50%);
   display: block;

@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { useLocation } from 'react-router-dom'
 import { Card, Col, Row, Button } from 'antd'
 import ContactInfo from './ContactInfo'
 import PersonalInfo from './PersonalInfo'
@@ -11,6 +12,10 @@ export default function Booking() {
   const [passengerInfo, setPassengerInfo] = useState([]) // 存储乘客信息
   const [contactData, setContactData] = useState({}) // 存储联系人信息
   const [selectedSeats, setSelectedSeats] = useState([]) // 存储已选座位
+  const location = useLocation()
+  const { route, selectedSeat } = location.state || {}
+
+  console.log(route)
 
   // 更新票数
   const updateTicketCount = (newCount) => {
@@ -57,8 +62,8 @@ export default function Booking() {
           </Col>
           {/* 右侧 Col */}
           <Col span={8}>
-            <RouteInfo />
-            {ticketCount > 0 && <PriceInfo ticketCount={ticketCount} />}
+            <RouteInfo route={route} selectedSeat={selectedSeat} />
+            {ticketCount > 0 && <PriceInfo ticketCount={ticketCount} selectedSeat={selectedSeat} />}
           </Col>
         </Row>
       </div>

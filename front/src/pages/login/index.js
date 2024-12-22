@@ -14,7 +14,7 @@ const Login = () => {
   const [loading, setLoading] = useState(false)
   const navigate = useNavigate()
   const { updateUserInfo } = useUser()
-  const [coolDown, setcoolDown] = useState(0);
+  const [coolDown, setcoolDown] = useState(0)
 
   useEffect(() => {
     const tab = searchParams.get('tab')
@@ -24,14 +24,14 @@ const Login = () => {
   }, [searchParams])
 
   useEffect(() => {
-    let timer;
+    let timer
     if (coolDown > 0) {
       timer = setInterval(() => {
-        setcoolDown(prev => prev - 1);
-      }, 1000);
+        setcoolDown((prev) => prev - 1)
+      }, 1000)
     }
-    return () => clearInterval(timer);
-  }, [coolDown]);
+    return () => clearInterval(timer)
+  }, [coolDown])
 
   const handleClose = () => {
     navigate('/')
@@ -129,8 +129,8 @@ const Login = () => {
   )
 
   const handleLogin = async (values) => {
-    if (loading || coolDown > 0) return;
-    setLoading(true);
+    if (loading || coolDown > 0) return
+    setLoading(true)
     try {
       let response
 
@@ -140,14 +140,19 @@ const Login = () => {
           password: values.password,
         })
       } else {
-        const formData = new FormData()
-        formData.append('name', values.name.trim())
-        formData.append('sex', values.sex)
-        formData.append('password', values.password)
-        formData.append('phone', values.phone)
-        formData.append('id_number', values.id_number)
+        const data = {
+          name: values.name.trim(),
+          sex: values.sex,
+          password: values.password,
+          phone: values.phone,
+          id_number: values.id_number,
+        }
 
-        response = await post('/user', formData)
+        response = await post('/user', data, {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        })
       }
 
       const token = response.headers.authorization
@@ -161,7 +166,7 @@ const Login = () => {
       updateUserInfo(userResponse.data.data)
 
       message.success(activeTab === 'login' ? '登录成功' : '注册成功')
-      navigate(userResponse.data.data.is_admin ? '/admin' : '/')
+      navigate('/')
     } catch (error) {
       console.error('Error:', error)
       message.error(error.message || '操作失败，请稍后重试')
@@ -216,21 +221,24 @@ const Login = () => {
           {activeTab === 'signup' ? renderSignupForm() : renderLoginForm()}
 
           <Form.Item>
-            <Button 
-              type="primary" 
-              htmlType="submit" 
-              block 
-              size="large" 
+            <Button
+              type="primary"
+              htmlType="submit"
+              block
+              size="large"
               className="login-btn"
               loading={loading}
               disabled={loading || coolDown > 0}
             >
-              {loading 
-                ? (activeTab === 'login' ? '登录中...' : '注册中...') 
+              {loading
+                ? activeTab === 'login'
+                  ? '登录中...'
+                  : '注册中...'
                 : coolDown > 0
-                  ? `请等待 ${coolDown} 秒`
-                  : (activeTab === 'login' ? 'LOGIN' : 'SIGN UP')
-              }
+                ? `请等待 ${coolDown} 秒`
+                : activeTab === 'login'
+                ? 'LOGIN'
+                : 'SIGN UP'}
             </Button>
           </Form.Item>
         </Form>

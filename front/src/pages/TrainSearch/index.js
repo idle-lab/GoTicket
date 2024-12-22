@@ -1,171 +1,114 @@
-import { Card } from 'antd'
-import { Cascader, Typography, DatePicker, Button, Checkbox } from 'antd'
+import { useNavigate } from 'react-router-dom'
+import { Card, AutoComplete, Typography, DatePicker, Button, message } from 'antd'
 import { SearchOutlined } from '@ant-design/icons'
-import React from 'react'
+import React, { useState } from 'react'
 import dayjs from 'dayjs'
+import axios from 'axios'
 
-export default function TrainSearch() {
-  const options = [
-    {
-      value: 'zhejiang',
-      label: 'Zhejiang',
-      children: [
-        {
-          value: 'hangzhou',
-          label: 'Hangzhou',
-        },
-        {
-          value: 'ningbo',
-          label: 'Ningbo',
-        },
-        {
-          value: 'wenzhou',
-          label: 'Wenzhou',
-        },
-      ],
-    },
-    {
-      value: 'shanghai',
-      label: 'Shanghai',
-    },
-    {
-      value: 'guangdong',
-      label: 'Guangdong',
-      children: [
-        {
-          value: 'guangzhou',
-          label: 'Guangzhou',
-        },
-        {
-          value: 'shenzhen',
-          label: 'Shenzhen',
-        },
-        {
-          value: 'foshan',
-          label: 'Foshan',
-        },
-      ],
-    },
-    {
-      value: 'beijing',
-      label: 'Beijing',
-    },
-    {
-      value: 'tianjin',
-      label: 'Tianjin',
-    },
-    {
-      value: 'jiangsu',
-      label: 'Jiangsu',
-      children: [
-        {
-          value: 'nanjing',
-          label: 'Nanjing',
-        },
-        {
-          value: 'suzhou',
-          label: 'Suzhou',
-        },
-        {
-          value: 'wuxi',
-          label: 'Wuxi',
-        },
-      ],
-    },
-    {
-      value: 'hunan',
-      label: 'Hunan',
-      children: [
-        {
-          value: 'changsha',
-          label: 'Changsha',
-        },
-        {
-          value: 'xiangtan',
-          label: 'Xiangtan',
-        },
-      ],
-    },
-    {
-      value: 'sichuan',
-      label: 'Sichuan',
-      children: [
-        {
-          value: 'chengdu',
-          label: 'Chengdu',
-        },
-        {
-          value: 'mianyang',
-          label: 'Mianyang',
-        },
-      ],
-    },
-    {
-      value: 'fujian',
-      label: 'Fujian',
-      children: [
-        {
-          value: 'xiamen',
-          label: 'Xiamen',
-        },
-        {
-          value: 'quanzhou',
-          label: 'Quanzhou',
-        },
-      ],
-    },
-    {
-      value: 'jiangxi',
-      label: 'Jiangxi',
-      children: [
-        {
-          value: 'nanchang',
-          label: 'Nanchang',
-        },
-        {
-          value: 'jingdezhen',
-          label: 'Jingdezhen',
-        },
-      ],
-    },
-    {
-      value: 'henan',
-      label: 'Henan',
-      children: [
-        {
-          value: 'zhengzhou',
-          label: 'Zhengzhou',
-        },
-        {
-          value: 'luoyang',
-          label: 'Luoyang',
-        },
-      ],
-    },
-    {
-      value: 'liaoning',
-      label: 'Liaoning',
-      children: [
-        {
-          value: 'shenyang',
-          label: 'Shenyang',
-        },
-        {
-          value: 'dalian',
-          label: 'Dalian',
-        },
-      ],
-    },
-  ]
+export default function TrainSearch({ initialValues }) {
+  const [from, setFrom] = useState(initialValues?.from || '')
+  const [to, setTo] = useState(initialValues?.to || '')
+  const [dates, setDates] = useState(initialValues?.dates || [dayjs(), null])
+  console.log(from, to, dates)
+  const [options, setOptions] = useState([])
 
-  const onChange = (value, selectedOptions) => {
-    console.log(value, selectedOptions)
+  const navigate = useNavigate() // React Router 的导航函数
+
+  const handleSearch = async (value) => {
+    if (value) {
+      const result = await fetchStations(value)
+      setOptions(result)
+    } else {
+      setOptions([])
+    }
   }
-  const onChangecheck = (e) => {
-    console.log(`checked = ${e.target.checked}`)
+
+  const fetchStations = async (query) => {
+    const token = localStorage.getItem('token') // 从本地存储中获取 token
+    if (!token) {
+      message.error('Token is missing. Please log in again.')
+      return []
+    }
+
+    try {
+      const response = await axios.get('/station', {
+        headers: {
+          Authorization: `${token}`, // 添加授权头
+        },
+      })
+
+      // 过滤数据并转换为 AutoComplete 的选项格式
+      const stations = response.data?.data || []
+      const uniquePositions = new Set()
+
+      return stations
+        .filter((station) => station.name.toLowerCase().includes(query.toLowerCase()))
+        .filter((station) => {
+          // 检查 position 是否已存在，如果不存在，则添加到 Set 中
+          if (uniquePositions.has(station.postion)) {
+            return false
+          }
+          uniquePositions.add(station.postion)
+          return true
+        })
+        .map((station) => ({
+          value: station.postion,
+          label: `${station.postion}`,
+        }))
+    } catch (error) {
+      console.error(error)
+      message.error('Failed to fetch stations')
+      return []
+    }
   }
-  const filter = (inputValue, path) =>
-    path.some((option) => option.label.toLowerCase().indexOf(inputValue.toLowerCase()) > -1)
+
+  const handleSearchTickets = async () => {
+    if (!from || !to || !dates[0]) {
+      message.error('Please select both stations and a departure date')
+      return
+    }
+    console.log(from, to, dates)
+    const departure_time_after = dates[0]?.format('YYYY-MM-DD HH:mm')
+    const departure_time_before = dates[0]?.endOf('day').format('YYYY-MM-DD HH:mm')
+    const arrival_time_after = dates[0]?.format('YYYY-MM-DD HH:mm')
+    const arrival_time_before = dates[0]?.endOf('day').format('YYYY-MM-DD HH:mm')
+    const token = localStorage.getItem('token')
+
+    try {
+      const response = await axios.post(
+        '/oneWayTickets',
+        {
+          // 请求的主体数据 (JSON 格式)
+          start_station: from,
+          end_station: to,
+          preferences: {
+            departure_time_before,
+            departure_time_after,
+            arrival_time_before,
+            arrival_time_after,
+          },
+        },
+        {
+          // 请求的配置，包括 headers 和其他参数
+          headers: {
+            Authorization: `${token}`, // 确保 token 的格式正确
+            'Content-Type': 'application/json',
+          },
+        },
+      )
+
+      console.log(response.data)
+      navigate('/routes', {
+        state: {
+          searchParams: { from, to, dates },
+          searchResults: response.data?.data || [],
+        },
+      })
+    } catch (error) {
+      console.error(error)
+      message.error('Failed to fetch tickets')
+    }
+  }
 
   return (
     <Card className="w-4/5">
@@ -174,28 +117,28 @@ export default function TrainSearch() {
         <div className="flex gap-4">
           <div>
             <Typography.Title level={5}>From</Typography.Title>
-            <Cascader
+            <AutoComplete
               size="large"
+              value={from}
               options={options}
-              onChange={onChange}
+              onSearch={handleSearch}
+              onSelect={(value) => setFrom(value)}
+              onChange={(value) => setFrom(value)}
               placeholder="Please select"
-              showSearch={{
-                filter,
-              }}
-              onSearch={(value) => console.log(value)}
+              style={{ width: 200 }}
             />
           </div>
           <div>
             <Typography.Title level={5}>To</Typography.Title>
-            <Cascader
+            <AutoComplete
               size="large"
+              value={to}
               options={options}
-              onChange={onChange}
+              onSearch={handleSearch}
+              onSelect={(value) => setTo(value)}
+              onChange={(value) => setTo(value)}
               placeholder="Please select"
-              showSearch={{
-                filter,
-              }}
-              onSearch={(value) => console.log(value)}
+              style={{ width: 200 }}
             />
           </div>
         </div>
@@ -214,16 +157,18 @@ export default function TrainSearch() {
             size="large"
             placeholder={['', 'Add Return Trip']}
             defaultValue={[dayjs(), null]}
-            minDate={dayjs()}
             maxDate={dayjs().add(24, 'day')}
             allowEmpty={[false, true]}
-            onChange={(date, dateString) => {
-              console.log(date, dateString)
-            }}
+            onChange={(dates) => setDates(dates)}
           />
           <div className="mt-4 flex justify-between items-center">
-            <Checkbox onChange={onChangecheck}>High speed only</Checkbox>
-            <Button type="primary" icon={<SearchOutlined />} size="large">
+            <div></div>
+            <Button
+              type="primary"
+              icon={<SearchOutlined />}
+              size="large"
+              onClick={handleSearchTickets}
+            >
               Search
             </Button>
           </div>

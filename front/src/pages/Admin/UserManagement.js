@@ -1,13 +1,36 @@
-import React, { useState } from 'react'
-import { Table, Button, Modal, Form, Input, Space } from 'antd'
+import React, { useState, useEffect } from 'react'
+import { Table, Button, Modal, Form, Input, Space, message } from 'antd'
+import axios from 'axios'
 
 const UserManagement = () => {
-  const [users, setUsers] = useState([
-    { id: 1, name: '张三', phone: '13800138000', sex: '男', idNumber: '110101199001011234' },
-    { id: 2, name: '李四', phone: '13900139000', sex: '女', idNumber: '110101199001011235' },
-  ])
+  const [users, setUsers] = useState([])
   const [isModalVisible, setIsModalVisible] = useState(false)
   const [editingUser, setEditingUser] = useState(null)
+  const [token, setToken] = useState('')
+
+  // 获取 token 并加载用户数据
+  useEffect(() => {
+    const token = localStorage.getItem('token')
+    setToken(token)
+
+    if (token) {
+      axios
+        .get('/admin/userInfo', {
+          headers: {
+            Authorization: `${token}`,
+          },
+        })
+        .then((response) => {
+          if (response.data.code === 200) {
+            setUsers(response.data.data) // 假设返回的用户数据在 data 字段中
+          }
+        })
+        .catch((error) => {
+          console.error('Error fetching users:', error)
+          message.error('获取用户数据失败')
+        })
+    }
+  }, [])
 
   const showModal = (user) => {
     setEditingUser(user)
@@ -25,11 +48,34 @@ const UserManagement = () => {
       setUsers(users.map((user) => (user.id === editingUser.id ? { ...user, ...values } : user)))
     } else {
       // 添加新用户
-      const newUser = { id: Date.now(), ...values }
-      setUsers([...users, newUser])
+      const newUser = {
+        name: values.name,
+        sex: values.sex,
+        password: values.password,
+        phone: values.phone,
+        id_number: values.idNumber,
+      }
+
+      axios
+        .post('/user', newUser)
+        .then((response) => {
+          if (response.data.code === 200) {
+            const newUserWithToken = { ...newUser, id: Date.now() }
+            setUsers([...users, newUserWithToken])
+            message.success('用户添加成功')
+            console.log('User added:', newUserWithToken)
+          } else {
+            message.error('用户添加失败')
+          }
+        })
+        .catch((error) => {
+          console.error('Error adding user:', error)
+          message.error('添加用户失败')
+        })
     }
-    setIsModalVisible(false)
-    setEditingUser(null)
+
+    setIsModalVisible(false) // Hide modal
+    setEditingUser(null) // Reset editing user
   }
 
   const handleDelete = (id) => {
@@ -62,7 +108,7 @@ const UserManagement = () => {
     },
     {
       title: '身份证号',
-      dataIndex: 'idNumber',
+      dataIndex: 'id_number',
       key: 'idNumber',
     },
     {
@@ -70,11 +116,7 @@ const UserManagement = () => {
       dataIndex: 'password',
       key: 'password',
     },
-    {
-      title: '创建日期',
-      dataIndex: 'createTime',
-      key: 'createTime',
-    },
+
     {
       title: '操作',
       key: 'action',
