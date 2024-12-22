@@ -58,6 +58,7 @@ func (Station) GetStationsById(station_id uint16) (*dto.Station, error) {
 	return &st, nil
 }
 
+
 func (Station) UpdateStation(new_station *dto.Station) error {
 	if err := db.DB.Table("stations").
 		Where("stations.id = ? ", new_station.ID).
@@ -66,3 +67,4 @@ func (Station) UpdateStation(new_station *dto.Station) error {
 	}
 	return nil
 }
+

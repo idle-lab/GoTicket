@@ -219,6 +219,7 @@ func AdminRegister(ctx *gin.Context) {
 	})
 }
 
+
 func ChangeUserInfo(ctx *gin.Context) {
 	user, err := services.GetUserInfoFromRequest(ctx)
 	if err != nil {
@@ -264,3 +265,4 @@ func GetAllUserInfo(ctx *gin.Context) {
 		Count:   len(users),
 	})
 }
+
