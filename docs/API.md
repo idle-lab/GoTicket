@@ -251,7 +251,9 @@ Body：以 json 格式给出路线名字，路线经过的车站
 
 **请求：**
 
+
 URL: `/station`
+
 
 Method：`GET`
 
@@ -324,6 +326,35 @@ Header:需要登录时获得的 token
 
 `Authorization`: token
 
+
+URL: `/route`
+
+Method：`GET`
+
+Header:需要登录时获得的 token
+
+`Authorization`: token
+
+
+**服务器响应：**
+
+```json
+{
+    "code": 200,  // http 状态码
+    "msg": "OK",  // 状态信息
+    "data": [
+        {
+            "id": int,// 这条路线的id
+            "name": string ,// 这条路线的名字
+            "price_pk": float, // 单位：元/km
+            "stations": [string...], // 经过的所有车站名,
+            "distance_from_start": [float...] // 每站到起点站的距离。
+        },
+        ...
+    ],
+    "count": 0  // 返回的数据条数
+}
+```
 
 **服务器响应：**
 

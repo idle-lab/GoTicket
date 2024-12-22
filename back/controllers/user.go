@@ -204,6 +204,7 @@ func AdminRegister(ctx *gin.Context) {
 	})
 }
 
+
 func ChangeUserInfo(ctx *gin.Context) {
 	user, err := services.GetUserInfoFromRequest(ctx)
 	if err != nil {
