@@ -33,6 +33,21 @@ func JWTAuthMiddleware() gin.HandlerFunc {
 	}
 }
 
+func AdminAuthMiddleware() gin.HandlerFunc {
+	return func(ctx *gin.Context) {
+		value, _ := ctx.Get("user")
+		user := value.(*dto.User)
+		if user.Role != "admin" {
+			ReturnError(ctx, &dto.JsonErrorStruct{
+				Code:    http.StatusUnauthorized,
+				Message: "you are not admin",
+			})
+			ctx.Abort()
+			return
+		}
+	}
+}
+
 // 获取 User 所有信息
 func GetUserInfo(ctx *gin.Context) {
 	value, _ := ctx.Get("user")
@@ -232,3 +247,22 @@ func ChangeUserInfo(ctx *gin.Context) {
 		Count:   0,
 	})
 }
+
+func GetAllUserInfo(ctx *gin.Context) {
+	users, err := models.User{}.GetAllUser()
+	if err != nil {
+		logger.Infof("get all user info failed: %s\n", err)
+		ReturnError(ctx, &dto.JsonErrorStruct{
+			Code:    http.StatusBadRequest,
+			Message: err.Error(),
+		})
+		return
+	}
+	ReturnSuccess(ctx, &dto.JsonStruct{
+		Code:    http.StatusOK,
+		Message: "OK",
+		Data:    users,
+		Count:   len(users),
+	})
+}
+

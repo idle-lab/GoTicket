@@ -64,6 +64,14 @@ func (User) GetUserById(id uint32) (*dto.User, error) {
 	return user, nil
 }
 
+func (User) GetAllUser() ([]dto.User, error) {
+	var users []dto.User
+	if err := db.DB.Table("users").Scan(&users).Error; err != nil {
+		return nil, err
+	}
+	return users, nil
+}
+
 func (User) AddUser(user *dto.User) error {
 	user.Role = "user"
 	return db.DB.Create(&user).Error

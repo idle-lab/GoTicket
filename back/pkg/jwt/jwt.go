@@ -21,7 +21,7 @@ func GenerateToken(user_id uint32, role string) (string, error) {
 		Id:   user_id,
 		Role: role,
 		RegisteredClaims: jwt.RegisteredClaims{
-			ExpiresAt: jwt.NewNumericDate(time.Now().Add(10 * time.Minute)),
+			ExpiresAt: jwt.NewNumericDate(time.Now().Add(2 * time.Hour)),
 			IssuedAt:  jwt.NewNumericDate(time.Now()),
 			Issuer:    "goticket",
 		},

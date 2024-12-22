@@ -207,7 +207,7 @@ func TestUpdateUserInfo(t *testing.T) {
 	resp = sendPUT(t, url, map[string]interface{}{
 		"id":        int64(data["id"].(float64)),
 		"name":      "timeplus",
-		"sex":       "Male",
+		"sex":       "Female",
 		"password":  "123456",
 		"phone":     "12345678901",
 		"id_number": "123456789012345678",
@@ -224,6 +224,25 @@ func TestUpdateUserInfo(t *testing.T) {
 	if resp.StatusCode != http.StatusOK {
 		t.Fatalf("Expected status 200, got %d", resp.StatusCode)
 	}
+	json.NewDecoder(resp.Body).Decode(&response)
+	if response.Code != 200 {
+		t.Errorf("Expected response code 200, got %d", response.Code)
+	}
+}
+
+func TestFetchAllUserInfo(t *testing.T) {
+	resp := Login(t, admin["phone"], admin["password"])
+	if resp == nil {
+		return
+	}
+	url := baseURL + "/admin/userInfo"
+
+	token := resp.Header.Get("Authorization")
+	resp = sendGET(t, url, token)
+	if resp.StatusCode != http.StatusOK {
+		t.Fatalf("Expected status 200, got %d", resp.StatusCode)
+	}
+	var response Response
 	json.NewDecoder(resp.Body).Decode(&response)
 	if response.Code != 200 {
 		t.Errorf("Expected response code 200, got %d", response.Code)
@@ -458,7 +477,7 @@ func TestAddStation(t *testing.T) {
 	}
 
 	// 添加车站
-	url := baseURL + "/station"
+	url := baseURL + "/admin/station"
 
 	token := resp.Header.Get("Authorization")
 
@@ -511,7 +530,7 @@ func TestAddRoute(t *testing.T) {
 	}
 
 	// 添加路线
-	url := baseURL + "/route"
+	url := baseURL + "/admin/route"
 
 	token := resp.Header.Get("Authorization")
 	for _, route := range routes {
@@ -563,7 +582,7 @@ func TestAddTrain(t *testing.T) {
 	}
 
 	// 添加列车
-	url := baseURL + "/train"
+	url := baseURL + "/admin/train"
 	token := resp.Header.Get("Authorization")
 	for _, train := range trains {
 		resp = sendPOST(t, url, train, token)
@@ -614,7 +633,7 @@ func TestAddTrainNumber(t *testing.T) {
 	}
 
 	// 添加车次
-	url := baseURL + "/trainNumber"
+	url := baseURL + "/admin/trainNumber"
 
 	token := resp.Header.Get("Authorization")
 	for _, train_number := range train_numbers {
