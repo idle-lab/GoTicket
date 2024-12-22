@@ -69,8 +69,8 @@ func TrainsQuery(start string, end string) ([]dto.AvailableRoute, error) {
 }
 
 // 处理并过滤掉所有不符合用户偏好的车次
-func HandkeRoutes(routes []dto.AvailableRoute, pref *dto.Preferences) ([]dto.RouteResponse, error) {
-	result := make([]dto.RouteResponse, 0)
+func HandkeRoutes(routes []dto.AvailableRoute, pref *dto.Preferences) ([]dto.OneWayRouteResponse, error) {
+	result := make([]dto.OneWayRouteResponse, 0)
 
 	for i := 0; i < len(routes); i++ {
 		station_distances_str := routes[i].Station_distances
@@ -132,7 +132,7 @@ func HandkeRoutes(routes []dto.AvailableRoute, pref *dto.Preferences) ([]dto.Rou
 				station_names = append(station_names, id_to_station[id])
 			}
 
-			result = append(result, dto.RouteResponse{
+			result = append(result, dto.OneWayRouteResponse{
 				Code:                             routes[i].Code,
 				Stations:                         station_names,
 				Dwell_time_per_stop:              dwell_times,

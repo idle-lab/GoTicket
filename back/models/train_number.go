@@ -13,3 +13,11 @@ func (TrainNumber) AddTrainNumber(train_number *dto.TrainNumber) error {
 	}
 	return nil
 }
+
+func (TrainNumber) GetAllTrainNumbers() ([]dto.TrainNumber, error) {
+	var tns []dto.TrainNumber
+	if err := db.DB.Table("train_numbers").Scan(&tns).Error; err != nil {
+		return nil, err
+	}
+	return tns, nil
+}

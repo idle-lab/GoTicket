@@ -16,7 +16,7 @@ func AddStation(ctx *gin.Context) {
 		logger.Infof("parse station info failed with err:%s", err)
 		ReturnError(ctx, &dto.JsonErrorStruct{
 			Code:    http.StatusBadRequest,
-			Message: fmt.Errorf("parse station info failed with err:%s", err),
+			Message: fmt.Sprintf("parse station info failed with err:%s", err),
 		})
 		return
 	}
@@ -25,7 +25,7 @@ func AddStation(ctx *gin.Context) {
 		logger.Infof("add station failed with err:%s", err)
 		ReturnError(ctx, &dto.JsonErrorStruct{
 			Code:    http.StatusBadRequest,
-			Message: fmt.Errorf("add station failed with err:%s", err),
+			Message: fmt.Sprintf("add station failed with err:%s", err),
 		})
 		return
 	}
@@ -37,7 +37,21 @@ func AddStation(ctx *gin.Context) {
 }
 
 func GetAllStations(ctx *gin.Context) {
-
+	stations, err := models.Station{}.GetAllStations()
+	if err != nil {
+		logger.Infof("add station failed with err:%s", err)
+		ReturnError(ctx, &dto.JsonErrorStruct{
+			Code:    http.StatusInternalServerError,
+			Message: "get station failed with some server internal error.",
+		})
+		return
+	}
+	ReturnSuccess(ctx, &dto.JsonStruct{
+		Code:    http.StatusOK,
+		Message: "OK",
+		Data:    stations,
+		Count:   len(stations),
+	})
 }
 
 func UpdateStations(ctx *gin.Context) {

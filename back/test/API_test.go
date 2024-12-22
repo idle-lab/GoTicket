@@ -411,6 +411,31 @@ func TestAddStation(t *testing.T) {
 	}
 }
 
+func TestGetStations(t *testing.T) {
+	// 登录并获取 token
+	resp := Login(t, baseAdmin, baseAdminPassword)
+	if resp == nil {
+		return
+	}
+
+	// 添加车站
+	url := baseURL + "/station"
+
+	token := resp.Header.Get("Authorization")
+
+	resp = sendGET(t, url, token)
+
+	if resp.StatusCode != http.StatusOK {
+		t.Fatalf("Expected status 200, got %d", resp.StatusCode)
+	}
+
+	var response Response
+	json.NewDecoder(resp.Body).Decode(&response)
+	if response.Code != 200 {
+		t.Errorf("Expected response code 200, got %d", response.Code)
+	}
+}
+
 // 添加路线
 func TestAddRoute(t *testing.T) {
 	// 登录并获取 token
@@ -435,6 +460,31 @@ func TestAddRoute(t *testing.T) {
 		if response.Code != 200 {
 			t.Errorf("Expected response code 200, got %d", response.Code)
 		}
+	}
+}
+
+func TestGetRoute(t *testing.T) {
+	// 登录并获取 token
+	resp := Login(t, baseAdmin, baseAdminPassword)
+	if resp == nil {
+		return
+	}
+
+	// 添加路线
+	url := baseURL + "/route"
+
+	token := resp.Header.Get("Authorization")
+
+	resp = sendGET(t, url, token)
+
+	if resp.StatusCode != http.StatusOK {
+		t.Fatalf("Expected status 200, got %d", resp.StatusCode)
+	}
+
+	var response Response
+	json.NewDecoder(resp.Body).Decode(&response)
+	if response.Code != 200 {
+		t.Errorf("Expected response code 200, got %d", response.Code)
 	}
 }
 
@@ -464,6 +514,31 @@ func TestAddTrain(t *testing.T) {
 	}
 }
 
+func TestGetTrain(t *testing.T) {
+	// 登录并获取 token
+	resp := Login(t, baseAdmin, baseAdminPassword)
+	if resp == nil {
+		return
+	}
+
+	// 添加列车
+	url := baseURL + "/train"
+	token := resp.Header.Get("Authorization")
+
+	resp = sendGET(t, url, token)
+
+	if resp.StatusCode != http.StatusOK {
+		t.Fatalf("Expected status 200, got %d", resp.StatusCode)
+	}
+
+	var response Response
+	json.NewDecoder(resp.Body).Decode(&response)
+	if response.Code != 200 {
+		t.Errorf("Expected response code 200, got %d", response.Code)
+	}
+
+}
+
 // 添加车次
 func TestAddTrainNumber(t *testing.T) {
 	// 登录并获取 token
@@ -491,6 +566,32 @@ func TestAddTrainNumber(t *testing.T) {
 	}
 }
 
+func TestGetTrainNumber(t *testing.T) {
+	// 登录并获取 token
+	resp := Login(t, baseAdmin, baseAdminPassword)
+	if resp == nil {
+		return
+	}
+
+	// 添加车次
+	url := baseURL + "/trainNumber"
+
+	token := resp.Header.Get("Authorization")
+
+	resp = sendGET(t, url, token)
+
+	if resp.StatusCode != http.StatusOK {
+		t.Fatalf("Expected status 200, got %d", resp.StatusCode)
+	}
+
+	var response Response
+	json.NewDecoder(resp.Body).Decode(&response)
+	if response.Code != 200 {
+		t.Errorf("Expected response code 200, got %d", response.Code)
+	}
+
+}
+
 // 查询单程车票
 func TestOneWayTicketQuery(t *testing.T) {
 	// 登录并获取 token
@@ -516,8 +617,7 @@ func TestOneWayTicketQuery(t *testing.T) {
 		"preferences":   preferences,
 	}
 
-	token := resp.Header.Get("Authorization")
-	resp = sendPOST(t, url, requestBody, token)
+	resp = sendPOST(t, url, requestBody, "")
 
 	if resp.StatusCode != http.StatusOK {
 		t.Fatalf("Expected status 200, got %d", resp.StatusCode)

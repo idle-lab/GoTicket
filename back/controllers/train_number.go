@@ -19,7 +19,7 @@ func AddTrainNumber(ctx *gin.Context) {
 		logger.Infof("parse train number info failed with err:%s", err)
 		ReturnError(ctx, &dto.JsonErrorStruct{
 			Code:    http.StatusBadRequest,
-			Message: fmt.Errorf("parse train number info failed with err:%s", err),
+			Message: fmt.Errorf("parse train number info failed with err:%s", err).Error(),
 		})
 		return
 	}
@@ -29,7 +29,7 @@ func AddTrainNumber(ctx *gin.Context) {
 		logger.Infof("invlid time format:%s", err)
 		ReturnError(ctx, &dto.JsonErrorStruct{
 			Code:    http.StatusBadRequest,
-			Message: fmt.Errorf("invlid time format:%s", err),
+			Message: fmt.Errorf("invlid time format:%s", err).Error(),
 		})
 		return
 	}
@@ -45,7 +45,7 @@ func AddTrainNumber(ctx *gin.Context) {
 		logger.Infof("get train failed with error: %s", err)
 		ReturnError(ctx, &dto.JsonErrorStruct{
 			Code:    http.StatusBadRequest,
-			Message: fmt.Errorf("get train failed with error: %s", err),
+			Message: fmt.Errorf("get train failed with error: %s", err).Error(),
 		})
 		return
 	}
@@ -55,7 +55,7 @@ func AddTrainNumber(ctx *gin.Context) {
 		logger.Infof("get route failed with error: %s", err)
 		ReturnError(ctx, &dto.JsonErrorStruct{
 			Code:    http.StatusBadRequest,
-			Message: fmt.Errorf("get route failed with error: %s", err),
+			Message: fmt.Errorf("get route failed with error: %s", err).Error(),
 		})
 		return
 	}
@@ -76,7 +76,49 @@ func AddTrainNumber(ctx *gin.Context) {
 }
 
 func GetAllTrainNumbers(ctx *gin.Context) {
-
+	rawTn, err := models.TrainNumber{}.GetAllTrainNumbers()
+	if err != nil {
+		logger.Infof("get train number failed with err: %s", err)
+		ReturnError(ctx, &dto.JsonErrorStruct{
+			Code:    http.StatusInternalServerError,
+			Message: "get train number failed with some server internal error.",
+		})
+		return
+	}
+	res := make([]dto.TrainNumberResponse, len(rawTn))
+	for i, raw := range rawTn {
+		route, err := models.Route{}.GetRouteById(raw.Route_id)
+		train, err := models.Train{}.GetTrainById(raw.Train_id)
+		if err != nil {
+			logger.Infof("get train number failed with err: %s", err)
+			ReturnError(ctx, &dto.JsonErrorStruct{
+				Code:    http.StatusInternalServerError,
+				Message: "get train number failed with some server internal error.",
+			})
+			return
+		}
+		dwell_time_per_stop_str := strings.Split(raw.Dwell_time_per_stop, ",")
+		dwell_time_per_stop := make([]uint16, len(dwell_time_per_stop_str))
+		for i, d := range dwell_time_per_stop_str {
+			dd, _ := strconv.Atoi(d)
+			dwell_time_per_stop[i] = uint16(dd)
+		}
+		res[i] = dto.TrainNumberResponse{
+			ID:                  raw.ID,
+			Code:                raw.Code,
+			Status:              raw.Status,
+			Start_time:          raw.Start_time.Format("2006-01-02 15:04"),
+			Dwell_time_per_stop: dwell_time_per_stop,
+			Train_name:          train.Name,
+			Route_name:          route.Name,
+		}
+	}
+	ReturnSuccess(ctx, &dto.JsonStruct{
+		Code:    http.StatusOK,
+		Message: "OK",
+		Data:    res,
+		Count:   len(res),
+	})
 }
 
 func UpdateTrainNumber(ctx *gin.Context) {

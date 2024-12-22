@@ -30,6 +30,14 @@ func (Station) GetStationsByPosition(postion string) ([]dto.Station, error) {
 	return sts, nil
 }
 
+func (Station) GetAllStations() ([]dto.Station, error) {
+	var sts []dto.Station
+	if err := db.DB.Table("stations").Scan(&sts).Error; err != nil {
+		return nil, err
+	}
+	return sts, nil
+}
+
 func (Station) GetStationsByIds(station_ids []uint16) ([]dto.Station, error) {
 	sts := make([]dto.Station, 0)
 	if err := db.DB.Table("stations").
@@ -38,4 +46,14 @@ func (Station) GetStationsByIds(station_ids []uint16) ([]dto.Station, error) {
 		return nil, err
 	}
 	return sts, nil
+}
+
+func (Station) GetStationsById(station_id uint16) (*dto.Station, error) {
+	st := dto.Station{}
+	if err := db.DB.Table("stations").
+		Where("stations.id = ? ", station_id).
+		Find(&st).Error; err != nil {
+		return nil, err
+	}
+	return &st, nil
 }

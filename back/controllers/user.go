@@ -21,11 +21,11 @@ func JWTAuthMiddleware() gin.HandlerFunc {
 		token := ctx.GetHeader("Authorization")
 		user, err := jwt.ParseToken(token)
 		if err != nil {
+			logger.Warnf("invail token %s", token)
 			ReturnError(ctx, &dto.JsonErrorStruct{
 				Code:    http.StatusUnauthorized,
 				Message: fmt.Sprintf("parse token failed with err: %s", err),
 			})
-			logger.Warnf("invail token %s", token)
 			ctx.Abort()
 			return
 		}
@@ -81,10 +81,10 @@ func Login(ctx *gin.Context) {
 func Register(ctx *gin.Context) {
 	user, err := services.GetUserInfoFromRequest(ctx)
 	if err != nil {
-		logger.Infof("login failed with invalid user info: %s.\n", err)
+		logger.Infof("register failed with invalid user info: %s\n", err)
 		ReturnError(ctx, &dto.JsonErrorStruct{
 			Code:    http.StatusBadRequest,
-			Message: err,
+			Message: err.Error(),
 		})
 		return
 	}
@@ -101,7 +101,7 @@ func Register(ctx *gin.Context) {
 	} else if err != nil && !gorm.IsRecordNotFoundError(err) {
 		ReturnError(ctx, &dto.JsonErrorStruct{
 			Code:    http.StatusBadRequest,
-			Message: err,
+			Message: err.Error(),
 		})
 		return
 	}
@@ -121,7 +121,7 @@ func Register(ctx *gin.Context) {
 	if err := services.GenerateToken(ctx, user.ID, "admin"); err != nil {
 		ReturnError(ctx, &dto.JsonErrorStruct{
 			Code:    http.StatusBadRequest,
-			Message: err,
+			Message: err.Error(),
 		})
 		return
 	}
@@ -149,7 +149,7 @@ func AdminRegister(ctx *gin.Context) {
 	if err != nil {
 		ReturnError(ctx, &dto.JsonErrorStruct{
 			Code:    http.StatusBadRequest,
-			Message: err,
+			Message: err.Error(),
 		})
 		return
 	}
@@ -180,7 +180,7 @@ func AdminRegister(ctx *gin.Context) {
 		if err != nil && !gorm.IsRecordNotFoundError(err) {
 			ReturnError(ctx, &dto.JsonErrorStruct{
 				Code:    http.StatusBadRequest,
-				Message: err,
+				Message: err.Error(),
 			})
 			return
 		}
@@ -202,4 +202,8 @@ func AdminRegister(ctx *gin.Context) {
 		Data:    map[string]interface{}{"role": "admin"},
 		Count:   1,
 	})
+}
+
+func ChangeInfo(ctx *gin.Context) {
+
 }
