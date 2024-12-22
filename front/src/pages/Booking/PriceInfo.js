@@ -1,16 +1,16 @@
 import React from 'react'
 import { Card, Col, Divider, Row, Typography } from 'antd'
 
-export default function PriceInfo() {
+export default function PriceInfo({ ticketCount, selectedSeat }) {
   return (
     <div>
       <Card title="Price Details" bordered={false} className="my-4">
         <Row>
           <Col span={12}>
-            <Typography.Text>Ticket x1</Typography.Text>
+            <Typography.Text>Ticket x {ticketCount}</Typography.Text>
           </Col>
           <Col span={12} style={{ textAlign: 'right' }}>
-            <Typography.Text strong>HK$589.86</Typography.Text>
+            <Typography.Text strong>HK${selectedSeat.price}</Typography.Text>
           </Col>
         </Row>
         <Row>
@@ -22,7 +22,7 @@ export default function PriceInfo() {
           </Col>
           <Col span={12} style={{ textAlign: 'right' }}>
             <Typography.Text strong style={{ fontSize: '18px' }}>
-              HK$589.86
+              HK${selectedSeat.price * ticketCount}
             </Typography.Text>
           </Col>
         </Row>

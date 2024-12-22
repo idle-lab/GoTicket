@@ -1,9 +1,13 @@
+import { useLocation } from 'react-router-dom'
 import TrainSearch from '../TrainSearch'
 import DateBox from './DateBox'
 import FilterBox from './FilterBox'
 import Routes from './Routes'
-import { Row, Col, Card } from 'antd'
+import { Row, Col } from 'antd'
 export default function TrainRoute() {
+  const location = useLocation()
+  const { searchParams } = location.state || {} // 从路由 state 获取传递的搜索参数
+
   return (
     <div>
       <div
@@ -14,7 +18,7 @@ export default function TrainRoute() {
       >
         <div className="h-14"></div>
         <div className="flex justify-center items-center">
-          <TrainSearch />
+          <TrainSearch initialValues={searchParams} />
         </div>
       </div>
 

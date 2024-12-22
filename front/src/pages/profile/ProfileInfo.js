@@ -1,45 +1,48 @@
-import React, { useState } from 'react';
-import { Card, Avatar, Button, Form, Input, Radio, message, Descriptions, Modal } from 'antd';
-import { UserOutlined, EditOutlined } from '@ant-design/icons';
-import { put } from '../../utils/request';
+import React, { useState } from 'react'
+import { Card, Avatar, Button, Form, Input, Radio, message, Descriptions, Modal } from 'antd'
+import { UserOutlined, EditOutlined } from '@ant-design/icons'
+import { put } from '../../utils/request'
 
 const ProfileInfo = ({ userInfo, updateUserInfo }) => {
-  const [isEditing, setIsEditing] = useState(false);
-  const [form] = Form.useForm();
+  const [isEditing, setIsEditing] = useState(false)
+  const [form] = Form.useForm()
 
   const initFormData = () => {
     form.setFieldsValue({
       name: userInfo.name,
       phone: userInfo.phone,
       sex: userInfo.sex,
-      id_number: userInfo.id_number
-    });
-  };
+      id_number: userInfo.id_number,
+    })
+  }
 
   // 打开编辑模式
   const handleEdit = () => {
-    initFormData();
-    setIsEditing(true);
-  };
+    initFormData()
+    setIsEditing(true)
+  }
 
   // 处理表单提交
   const handleSubmit = async (values) => {
     try {
-      // 这里需要后端提供更新用户信息的 API
       const response = await put('/userInfo', {
+        id: userInfo.id,
         name: values.name.trim(),
         phone: values.phone.trim(),
         sex: values.sex,
-        id_number: values.id_number.trim()
-      });
+        id_number: values.id_number.trim(),
+        password: userInfo.password,
+      })
 
-      updateUserInfo(response.data.data);
-      message.success('Profile updated successfully');
-      setIsEditing(false);
+      // 如果响应数据有效，更新用户信息
+      updateUserInfo(response.data.data)
+      message('Profile updated successfully')
+
+      setIsEditing(false)
     } catch (error) {
-      message.error(error.message || 'Failed to update profile');
+      message.error(error.message || 'Failed to update profile')
     }
-  };
+  }
 
   // 渲染用户信息展示卡片
   const renderUserInfo = () => (
@@ -49,19 +52,14 @@ const ProfileInfo = ({ userInfo, updateUserInfo }) => {
           size={64}
           icon={<UserOutlined />}
           style={{
-            backgroundColor: userInfo?.is_admin ? '#f56a00' : '#87d068'
+            backgroundColor: userInfo?.role === 'admin' ? '#f56a00' : '#87d068',
           }}
         />
         <div className="profile-title">
           <h2>{userInfo?.name}</h2>
-          {userInfo?.is_admin && <span className="admin-badge">Admin</span>}
+          {userInfo?.role === 'admin' && <span className="admin-badge">Admin</span>}
         </div>
-        <Button
-          type="primary"
-          icon={<EditOutlined />}
-          onClick={handleEdit}
-          className="edit-button"
-        >
+        <Button type="primary" icon={<EditOutlined />} onClick={handleEdit} className="edit-button">
           Edit Profile
         </Button>
       </div>
@@ -76,7 +74,7 @@ const ProfileInfo = ({ userInfo, updateUserInfo }) => {
         </Descriptions.Item>
       </Descriptions>
     </Card>
-  );
+  )
 
   // 渲染编辑表单
   const renderEditForm = () => (
@@ -87,18 +85,13 @@ const ProfileInfo = ({ userInfo, updateUserInfo }) => {
       footer={null}
       width={600}
     >
-      <Form
-        form={form}
-        layout="vertical"
-        onFinish={handleSubmit}
-        className="edit-form"
-      >
+      <Form form={form} layout="vertical" onFinish={handleSubmit} className="edit-form">
         <Form.Item
           name="name"
           label="Name"
           rules={[
             { required: true, message: 'Please input your name!' },
-            { max: 20, message: 'Name cannot exceed 20 characters!' }
+            { max: 20, message: 'Name cannot exceed 20 characters!' },
           ]}
         >
           <Input />
@@ -109,7 +102,7 @@ const ProfileInfo = ({ userInfo, updateUserInfo }) => {
           label="Phone"
           rules={[
             { required: true, message: 'Please input your phone number!' },
-            { pattern: /^\d+$/, message: 'Phone number must contain only digits!' }
+            { pattern: /^\d+$/, message: 'Phone number must contain only digits!' },
           ]}
         >
           <Input />
@@ -131,10 +124,10 @@ const ProfileInfo = ({ userInfo, updateUserInfo }) => {
           label="ID Number"
           rules={[
             { required: true, message: 'Please input your ID number!' },
-            { 
-              pattern: /^\d{15}$|^\d{17}(\d|X|x)$/, 
-              message: 'Please enter a valid ID number!' 
-            }
+            {
+              pattern: /^\d{15}$|^\d{17}(\d|X|x)$/,
+              message: 'Please enter a valid ID number!',
+            },
           ]}
         >
           <Input />
@@ -150,14 +143,15 @@ const ProfileInfo = ({ userInfo, updateUserInfo }) => {
         </Form.Item>
       </Form>
     </Modal>
-  );
+  )
 
   return (
     <>
       {renderUserInfo()}
       {renderEditForm()}
     </>
-  );
-};
+  )
+}
 
-export default ProfileInfo;
+export default ProfileInfo
+
